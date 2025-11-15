@@ -22,6 +22,7 @@ struct Goal: Identifiable, Hashable, Codable {
     var subgoals: [Subgoal] = []
     var isCompleted: Bool = false
     var reflections: [String] = []
+    var character: Character
     
 
     var progress: Double {
@@ -29,4 +30,11 @@ struct Goal: Identifiable, Hashable, Codable {
         let done = subgoals.filter { $0.isCompleted }.count
         return Double(done) / Double(subgoals.count)
     }
+}
+
+struct Character: Identifiable, Hashable, Codable {
+    var id = UUID()
+    var image: String
+    var waterLevel: Int
+    var foodLevel: Int
 }

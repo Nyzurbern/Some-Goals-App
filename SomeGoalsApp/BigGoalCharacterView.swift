@@ -13,7 +13,7 @@ struct BigGoalCharacterView: View {
     var body: some View {
         ScrollView{
             VStack{
-                Text("Due Date:")
+                Text("Character")
                     .bold()
                     .font(.title)
                 Image("subject nobody")

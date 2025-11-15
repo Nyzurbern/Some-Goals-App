@@ -190,7 +190,7 @@ struct GoalDetailView: View {
                 title: "Test",
                 description: "Desc",
                 deadline: Date(),
-                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")]
+                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")], character: Character(image: "subject nobody", waterLevel: 30, foodLevel: 30)
             )
         )
     )

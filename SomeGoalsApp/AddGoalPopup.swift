@@ -14,7 +14,8 @@ struct AddGoalPopupView: View {
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var deadline: Date = Date()
-    @State private var reward: Int = 50 
+    @State private var reward: Int = 50
+    @State private var image: String = "subject nobody"
     
     var body: some View {
         NavigationStack {
@@ -30,15 +31,29 @@ struct AddGoalPopupView: View {
                 Section(header: Text("Reward")) {
                     Text("Coin reward: \(reward)")
                 }
+                
+                Section(header: Text("Character")) {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            Button{
+                                image = "subject nobody"
+                            }label: {
+                                Image("Subject 3")
+                            }
+                            Button{
+                                image = "subject nobody"
+                            }label: {
+                                Image("Subject 3")
+                            }
+                        }
+                    }
+                }
             }
             .navigationTitle("Add Goal")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        let g = Goal(title: title, description: description, deadline: deadline, subgoals: [], reflections: [])
+                        let g = Goal(title: title, description: description, deadline: deadline, subgoals: [], reflections: [], character: Character(image: image, waterLevel: 30, foodLevel: 30))
                         userData.goals.append(g)
                         dismiss()
                     }
@@ -47,9 +62,10 @@ struct AddGoalPopupView: View {
             }
         }
     }
+    
 }
 
-#Preview {
-    AddGoalPopupView()
-        .environmentObject(UserData(sample: true))
-}
+    #Preview {
+        AddGoalPopupView()
+            .environmentObject(UserData(sample: true))
+    }

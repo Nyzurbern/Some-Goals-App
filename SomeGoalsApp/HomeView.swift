@@ -95,7 +95,7 @@ struct HomeView: View {
                             NavigationLink {
                                 BigGoalCharacterView()
                             } label: {
-                                Image("subject nobody")
+                                Image(goal.character.image)
                             }
                             NavigationLink {
                                 // pass binding to the goal so edits apply to list

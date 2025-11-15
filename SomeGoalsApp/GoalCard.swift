@@ -67,7 +67,7 @@ struct GoalCardView: View {
     GoalCardView(goal: Goal(title: "Example", description: "Quick test", deadline: Date(), subgoals: [
         Subgoal(title: "A", isCompleted: true),
         Subgoal(title: "B")
-    ]))
+    ], character: Character(image: "subject nobody", waterLevel: 30, foodLevel: 30)))
         .padding()
         .previewLayout(.sizeThatFits)
 }
