@@ -33,7 +33,7 @@ struct AddSubGoalPopupView: View {
                     
                     Section(header: Text("Sub-goal")) {
                         TextField("Title", text: $title)
-                        Stepper("Reward: \(reward) coins", value: $reward, in: 0...200)
+                        Text("Reward: \(reward) coins")
                     }
                 }
             }

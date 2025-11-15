@@ -14,7 +14,7 @@ struct AddGoalPopupView: View {
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var deadline: Date = Date()
-    @State private var reward: Int = 50
+    @State private var reward: Int = 50 
     
     var body: some View {
         NavigationStack {
@@ -28,7 +28,7 @@ struct AddGoalPopupView: View {
                 }
                 
                 Section(header: Text("Reward")) {
-                    Stepper("Coin reward: \(reward)", value: $reward, in: 0...500)
+                    Text("Coin reward: \(reward)")
                 }
             }
             .navigationTitle("Add Goal")
