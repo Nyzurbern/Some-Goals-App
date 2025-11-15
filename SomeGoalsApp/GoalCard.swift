@@ -63,11 +63,10 @@ struct GoalCardView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .sizeThatFitsLayout) {
     GoalCardView(goal: Goal(title: "Example", description: "Quick test", deadline: Date(), subgoals: [
         Subgoal(title: "A", isCompleted: true),
         Subgoal(title: "B")
     ], character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30)))
         .padding()
-        .previewLayout(.sizeThatFits)
 }

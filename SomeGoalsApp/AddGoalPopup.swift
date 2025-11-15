@@ -15,8 +15,14 @@ struct AddGoalPopupView: View {
     @State private var description: String = ""
     @State private var deadline: Date = Date()
     @State private var reward: Int = 50
-    @State private var image: String = "subject nobody"
-    @State private var profileImage: String = "Subject 3"
+    @State private var selectedCharacterIndex: Int = 0
+    
+    // nitin improved character selection
+    private let characterOptions = [
+        Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30),
+        Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30)
+        // can add more chars easily now ig
+    ]
     
     var body: some View {
         NavigationStack {
@@ -24,9 +30,14 @@ struct AddGoalPopupView: View {
                 Section(header: Text("Goal Details")) {
                     TextField("Title", text: $title)
                         .textInputAutocapitalization(.sentences)
+                    
                     TextField("Short description", text: $description)
                         .textInputAutocapitalization(.sentences)
-                    DatePicker("Deadline", selection: $deadline, displayedComponents: .date)
+                    
+                    DatePicker("Deadline",
+                             selection: $deadline,
+                             in: Date()...,
+                             displayedComponents: .date)
                 }
                 
                 Section(header: Text("Reward")) {
@@ -34,40 +45,68 @@ struct AddGoalPopupView: View {
                 }
                 
                 Section(header: Text("Character")) {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            Button{
-                                image = "subject nobody"
-                                profileImage = "Subject 3"
-                            }label: {
-                                Image("Subject 3")
-                            }
-                            Button{
-                                image = "subject nobody"
-                                profileImage = "Subject 3"
-                            }label: {
-                                Image("Subject 3")
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(characterOptions.indices, id: \.self) { index in
+                                Button {
+                                    selectedCharacterIndex = index
+                                } label: {
+                                    VStack {
+                                        Image(characterOptions[index].profileImage)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 60, height: 60)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(selectedCharacterIndex == index ?
+                                                           Color.blue : Color.clear, lineWidth: 3)
+                                            )
+                                        
+                                        Text("Character \(index + 1)")
+                                            .font(.caption)
+                                            .foregroundColor(.primary)
+                                    }
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
+                        .padding(.horizontal, 8)
                     }
+                    .frame(height: 100)
                 }
             }
             .navigationTitle("Add Goal")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
-                        let g = Goal(title: title, description: description, deadline: deadline, subgoals: [], reflections: [], character: Character(profileImage: profileImage, image: image, waterLevel: 30, foodLevel: 30))
-                        userData.goals.append(g)
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
                         dismiss()
                     }
-                    .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add") {
+                        addGoal()
+                    }
+                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
     }
     
+    private func addGoal() {
+        let newGoal = Goal(
+            title: title.trimmingCharacters(in: .whitespacesAndNewlines),
+            description: description.trimmingCharacters(in: .whitespacesAndNewlines),
+            deadline: deadline,
+            subgoals: [],
+            reflections: [],
+            character: characterOptions[selectedCharacterIndex]
+        )
+        userData.goals.append(newGoal)
+        dismiss()
+    }
 }
-
     #Preview {
         AddGoalPopupView()
             .environmentObject(UserData(sample: true))
