@@ -92,7 +92,11 @@ struct HomeView: View {
                     LazyVStack(spacing: 16) {
                         ForEach(userData.goals.indices, id: \.self) { idx in
                             let goal = userData.goals[idx]
-                            
+                            NavigationLink {
+                                BigGoalCharacterView()
+                            } label: {
+                                Image("subject nobody")
+                            }
                             NavigationLink {
                                 // pass binding to the goal so edits apply to list
                                 GoalDetailView(goal: $userData.goals[idx])
