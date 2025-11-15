@@ -73,16 +73,7 @@ struct HomeView: View {
                             .foregroundStyle(.white)
                     }
                     
-                    Button {
-                        showAddSubGoal = true
-                    } label: {
-                        Label("Add Sub-goal", systemImage: "plus.circle")
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 14)
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.green))
-                            .foregroundStyle(.white)
-                    }
-                    
+                   
                     Spacer()
                 }
                 .padding(.horizontal)
