@@ -172,7 +172,7 @@ struct GoalDetailView: View {
                         newReflection = ""
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.purple)
+                    .tint(.blue)
                 }
 
                 Spacer(minLength: 40)
