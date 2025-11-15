@@ -31,19 +31,22 @@ struct BigGoalCharacterView: View {
                                 .frame(width: foodRectWidth, height: 40)
                                 .frame(maxWidth: 300, alignment: .leading)
                                 .foregroundStyle(.orange)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         Text("🍞")
                     }
                     Button{
                         print("Food is served")
-                        foodRectWidth += 10
+                        if foodRectWidth < 300 {
+                            foodRectWidth += 10
+                        }
                     } label: {
                         Text("Feed")
                             .padding()
                             .background(.orange)
                             .foregroundStyle(.white)
                             .frame(height: 41.5)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }
                 HStack{
@@ -60,20 +63,23 @@ struct BigGoalCharacterView: View {
                                 .frame(width: waterRectWidth, height: 40)
                                 .frame(maxWidth: 300, alignment: .leading)
                                 .foregroundStyle(.blue)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                         Text("💧")
                     }
                     Button{
                         print("Drinks are served")
                         print(waterRectWidth)
-                        waterRectWidth += 10
+                        if waterRectWidth < 300 {
+                            waterRectWidth += 10
+                        }
                     } label: {
                         Text("Drink")
                             .padding()
                             .background(.blue)
                             .foregroundStyle(.white)
                             .frame(height: 41.5)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }
             }
