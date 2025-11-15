@@ -24,7 +24,7 @@ struct GoalDuePopupView: View {
             .foregroundStyle(.red)
         
         VStack {
-            NavigationLink("I didn't manage to achieve it...", destination: ())
+            NavigationLink("I didn't manage to achieve it...", destination: FailedGoalView())
             Button("I didn't manage to achieve it...", action: {
             })
                 .tint(.red)
