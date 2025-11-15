@@ -34,6 +34,7 @@ struct Goal: Identifiable, Hashable, Codable {
 
 struct Character: Identifiable, Hashable, Codable {
     var id = UUID()
+    var profileImage: String
     var image: String
     var waterLevel: Int
     var foodLevel: Int

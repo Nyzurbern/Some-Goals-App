@@ -23,7 +23,7 @@ final class UserData: ObservableObject {
                         Subgoal(title: "Draft", coinReward: 20),
                         Subgoal(title: "Proofread", coinReward: 10)
                      ],
-                     reflections: ["Start early next time"], character: Character(image: "subject nobody", waterLevel: 30, foodLevel: 30))
+                     reflections: ["Start early next time"], character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30))
             ]
             coins = 0
         }
