@@ -8,17 +8,32 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var userData = UserData(sample: false) // set true for sample data
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+                .environmentObject(userData)
+            
+            ReflectionView()
+                .tabItem {
+                    Label("Reflection", systemImage: "book.fill")
+                }
+                .environmentObject(userData)
+            
+            ShopView()
+                .tabItem {
+                    Label("Shop", systemImage: "cart.fill")
+                }
+                .environmentObject(userData)
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
 }
+
