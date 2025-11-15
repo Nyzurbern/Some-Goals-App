@@ -39,9 +39,6 @@ struct AddSubGoalPopupView: View {
             }
             .navigationTitle("Add Sub-goal")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
                         guard !userData.goals.isEmpty else { return }
