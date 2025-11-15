@@ -60,7 +60,7 @@ struct ReflectionView: View {
                         newReflection = ""
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.purple)
+                    .tint(.blue)
                     .padding(.horizontal)
                     
                     Spacer()
