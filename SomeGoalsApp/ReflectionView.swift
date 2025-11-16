@@ -10,27 +10,25 @@ import SwiftUI
 struct ReflectionView: View {
     @EnvironmentObject var userData: UserData
     @State private var selectedIndex: Int = 0
-    @State private var newReflection: String = ""
+    @State private var newReflection = ""
 
     var body: some View {
         NavigationStack {
             VStack {
                 if userData.goals.isEmpty {
-                    Text("No goals yet. Add a goal from Home to start reflecting.")
-                        .foregroundColor(.secondary)
-                        .padding()
+                    Text("No goals yet").foregroundColor(.secondary).padding()
                     Spacer()
                 } else {
                     Picker("Goal", selection: $selectedIndex) {
-                        ForEach(userData.goals.indices, id: \.self) { idx in
-                            Text(userData.goals[idx].title).tag(idx)
+                        ForEach(userData.goals.indices, id: \.self) { i in
+                            Text(userData.goals[i].title).tag(i)
                         }
                     }
                     .pickerStyle(.segmented)
                     .padding()
 
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading) {
                             ForEach(userData.goals[selectedIndex].reflections, id: \.self) { r in
                                 Text("• \(r)")
                                     .padding(8)
@@ -48,18 +46,17 @@ struct ReflectionView: View {
                         .padding()
 
                     Button("Add Reflection") {
-                        let t = newReflection.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !t.isEmpty else { return }
-                        let goal = userData.goals[selectedIndex]
-                        userData.addReflection(goalID: goal.id, reflection: t)
+                        let trimmed = newReflection.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !trimmed.isEmpty else { return }
+                        let goalID = userData.goals[selectedIndex].id
+                        userData.addReflection(goalID: goalID, reflection: trimmed)
                         newReflection = ""
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.blue)
                     .padding(.horizontal)
                 }
             }
-            .navigationTitle("Reflection Journal")
+            .navigationTitle("Reflections")
         }
     }
 }

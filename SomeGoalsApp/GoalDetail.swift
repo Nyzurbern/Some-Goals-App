@@ -10,102 +10,48 @@ import SwiftUI
 struct GoalDetailView: View {
     @EnvironmentObject var userData: UserData
     let goalID: UUID
+    var onComplete: (() -> Void)? // optional callback when goal is marked complete
 
-    // local editable copies for text fields; write back via userData.updateGoal
     @State private var newReflection: String = ""
-    @State private var showConfirmComplete: Bool = false
+    @State private var showExtendConfirm: Bool = false
+    @State private var showAddSubgoalSheet = false
 
-    private var goalIndex: Int? {
-        userData.goals.firstIndex(where: { $0.id == goalID })
-    }
-
-    private var bindingGoal: Goal? {
-        guard let idx = goalIndex else { return nil }
-        return userData.goals[idx]
-    }
+    private var goalIndex: Int? { userData.goals.firstIndex(where: { $0.id == goalID }) }
+    private var goal: Goal? { guard let i = goalIndex else { return nil }; return userData.goals[i] }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            if let goal = bindingGoal {
+        VStack {
+            if let g = goal {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
-                        // Title
-                        TextField("Title", text: Binding(
-                            get: { goal.title },
-                            set: { newVal in
-                                var g = goal
-                                g.title = newVal
-                                userData.updateGoal(g)
-                            }))
-                            .font(.title2.bold())
+                        Text(g.title).font(.title2).bold()
+                        Text(g.description).foregroundColor(.secondary)
 
-                        // Description
-                        TextField("Short description", text: Binding(
-                            get: { goal.description },
-                            set: { newVal in
-                                var g = goal
-                                g.description = newVal
-                                userData.updateGoal(g)
-                            }))
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-
-                        // Deadline
                         HStack {
                             Text("Deadline:")
                             Spacer()
-                            DatePicker("", selection: Binding(
-                                get: { goal.deadline },
-                                set: { newVal in
-                                    var g = goal
-                                    g.deadline = newVal
-                                    userData.updateGoal(g)
-                                }), displayedComponents: .date)
-                                .datePickerStyle(.compact)
+                            Text(g.deadline, style: .date).foregroundColor(g.isOverdue ? .red : .primary)
                         }
 
-                        // Progress
-                        VStack(alignment: .leading) {
-                            Text("Progress")
-                                .font(.headline)
-                            ProgressView(value: goal.progressFraction)
-                                .frame(height: 12)
-                            Text(goal.percentString).font(.caption).foregroundColor(.secondary)
-                        }
+                        ProgressView(value: g.progressFraction).frame(height: 12)
+                        Text(g.percentString).font(.caption).foregroundColor(.secondary)
 
-                        // Sub-goals (iterate by object, not indices)
                         VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("Sub-goals")
-                                    .font(.headline)
-                                Spacer()
-                                // Ideally show the Home sheet to add - fallback is noop
-                                Button("Add") {
-                                    // No-op: HomeView handles creation flow via sheet
-                                }
-                            }
-
-                            ForEach(goal.subgoals, id: \.id) { sub in
+                            Text("Sub-goals").font(.headline)
+                            ForEach(g.subgoals) { s in
                                 HStack {
                                     Button {
-                                        userData.toggleSubgoalCompletion(goalID: goal.id, subgoalID: sub.id)
+                                        userData.toggleSubgoalCompletion(goalID: g.id, subgoalID: s.id)
                                     } label: {
-                                        Image(systemName: sub.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(sub.isCompleted ? .green : .primary)
+                                        Image(systemName: s.isCompleted ? "checkmark.circle.fill" : "circle")
+                                            .foregroundColor(s.isCompleted ? .green : .primary)
                                     }
-
-                                    // Update title via UserData API
                                     TextField("Subgoal", text: Binding(
-                                        get: { sub.title },
-                                        set: { newVal in
-                                            userData.updateSubgoalTitle(goalID: goal.id, subgoalID: sub.id, newTitle: newVal)
-                                        }))
-
+                                        get: { s.title },
+                                        set: { newVal in userData.updateSubgoalTitle(goalID: g.id, subgoalID: s.id, newTitle: newVal) }
+                                    ))
                                     Spacer()
-
-                                    Button {
-                                        userData.removeSubgoal(goalID: goal.id, subgoalID: sub.id)
-                                    } label: {
+                                    Button { userData.removeSubgoal(goalID: g.id, subgoalID: s.id) } label: {
                                         Image(systemName: "trash").foregroundColor(.red)
                                     }
                                 }
@@ -113,61 +59,45 @@ struct GoalDetailView: View {
                                 .background(Color.gray.opacity(0.06))
                                 .cornerRadius(8)
                             }
+
+                            Button("Add Subgoal") { showAddSubgoalSheet = true }
+                                .buttonStyle(.borderedProminent)
+                                .sheet(isPresented: $showAddSubgoalSheet) {
+                                    AddSubGoalPopupView(goalID: g.id) { newSub in userData.addSubgoal(to: g.id, subgoal: newSub) }
+                                }
                         }
 
-                        // Reflections
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Reflections")
-                                .font(.headline)
-                            ForEach(goal.reflections, id: \.self) { r in
-                                Text("• \(r)")
-                                    .padding(8)
-                                    .background(Color.gray.opacity(0.07))
-                                    .cornerRadius(8)
+                        VStack(alignment: .leading) {
+                            Text("Reflections").font(.headline)
+                            ForEach(g.reflections, id: \.self) { r in
+                                Text("• \(r)").padding(8).background(Color.gray.opacity(0.07)).cornerRadius(8)
                             }
-
-                            TextEditor(text: $newReflection)
-                                .frame(height: 120)
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-
+                            TextEditor(text: $newReflection).frame(height: 120).overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
                             Button("Add Reflection") {
-                                userData.addReflection(goalID: goal.id, reflection: newReflection)
+                                let trimmed = newReflection.trimmingCharacters(in: .whitespacesAndNewlines)
+                                guard !trimmed.isEmpty else { return }
+                                userData.addReflection(goalID: g.id, reflection: trimmed)
                                 newReflection = ""
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.blue)
+                            }.buttonStyle(.borderedProminent)
                         }
-
-                        Spacer(minLength: 40)
 
                         HStack {
-                            Button("Extend Deadline +2d") {
-                                userData.extendDeadline(for: goal.id, byDays: 2)
-                            }
-                            .buttonStyle(.bordered)
-
+                            Button("Extend +2d") { userData.extendDeadline(for: g.id, byDays: 2) }.buttonStyle(.bordered)
                             Spacer()
-
-                            Button(role: .destructive) {
-                                showConfirmComplete = true
-                            } label: {
-                                Text("Mark Complete")
-                            }
+                            Button(role: .destructive) { showExtendConfirm = true } label: { Text("Mark Complete") }
                         }
-                    }
-                    .padding()
+                    }.padding()
                 }
-                .confirmationDialog("Are you sure?", isPresented: $showConfirmComplete, actions: {
+                .confirmationDialog("Confirm complete?", isPresented: $showExtendConfirm) {
                     Button("Yes, complete") {
-                        userData.markGoalCompleted(goal.id)
+                        let beforeDeadline = Date() <= g.deadline
+                        userData.markGoalCompleted(g.id, beforeDeadlineBonus: beforeDeadline)
+                        onComplete?()
                     }
                     Button("Cancel", role: .cancel) {}
-                })
-                .navigationTitle(goal.title)
+                }
             } else {
-                Text("Goal not found")
-                    .foregroundColor(.secondary)
-                    .padding()
+                Text("Goal not found").foregroundColor(.secondary)
             }
         }
     }

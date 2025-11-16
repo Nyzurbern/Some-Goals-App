@@ -11,48 +11,34 @@ struct GoalCardView: View {
     let goal: Goal
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
-                VStack(alignment: .leading) {
-                    Text(goal.title)
-                        .font(.headline)
-                        .bold()
-                    Text(goal.description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(goal.title).font(.headline).bold().lineLimit(1)
+                    Text(goal.description).font(.subheadline).foregroundColor(.secondary).lineLimit(1)
                 }
                 Spacer()
-                Text(goal.percentString)
-                    .bold()
+                Text(goal.percentString).bold()
             }
 
             Text("Deadline: \(goal.deadline.formatted(.dateTime.month().day().year()))")
                 .font(.caption)
                 .foregroundColor(goal.isOverdue ? .red : .secondary)
 
-            ProgressView(value: goal.progressFraction)
-                .frame(height: 8)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
+            ProgressView(value: goal.progressFraction).frame(height: 8).clipShape(RoundedRectangle(cornerRadius: 6))
 
             if !goal.subgoals.isEmpty {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Sub-goals")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    Text("Sub-goals").font(.caption).foregroundColor(.secondary)
                     ForEach(goal.subgoals.prefix(3)) { s in
                         HStack {
-                            Text(s.title)
-                                .font(.caption)
+                            Text(s.title).font(.caption).lineLimit(1)
                             Spacer()
-                            Text(s.isCompleted ? "✅" : "❌")
-                                .font(.caption)
+                            Text(s.isCompleted ? "✅" : "❌").font(.caption)
                         }
                     }
                     if goal.subgoals.count > 3 {
-                        Text("…and \(goal.subgoals.count - 3) more")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
+                        Text("…and \(goal.subgoals.count - 3) more").font(.caption2).foregroundColor(.secondary)
                     }
                 }
             }

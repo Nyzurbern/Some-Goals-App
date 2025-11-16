@@ -5,56 +5,71 @@
 //  Created by Anish Das on 15/11/25.
 //
 
+// ShopView.swift
+// UI to browse and buy shop items (buildings + boosters)
+
 import SwiftUI
 
 struct ShopView: View {
     @EnvironmentObject var userData: UserData
+    @State private var selectedCategory: ShopCategory = .buildings
+    @State private var showNotEnough = false
+    @State private var lastBought: String?
 
-    @State private var ownedItems: Set<String> = []
-    @State private var showNotEnoughAlert: Bool = false
-
-    let items = [
-        ("Avatar Hat", 100),
-        ("Avatar Jacket", 200),
-        ("Background Theme", 300),
-        ("Special Badge", 500)
-    ]
+    var itemsForCategory: [ShopItem] {
+        userData.shopItems.filter { $0.category == selectedCategory }
+    }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 16) {
-                    Text("Shop / Rewards")
-                        .font(.largeTitle)
-                        .bold()
-                        .padding(.top)
+            VStack {
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(ShopCategory.allCases, id: \.self) { category in
+                        Text(category.displayName).tag(category)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding()
 
-                    Text("Coins: \(userData.coins)")
-                        .font(.title2)
-                        .foregroundStyle(.yellow)
+                Text("Coins: \(userData.coins)").font(.headline).padding(.bottom, 4)
 
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                        ForEach(items, id: \.0) { item in
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                        ForEach(itemsForCategory) { item in
                             VStack(spacing: 8) {
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.blue.opacity(0.12))
-                                    .frame(height: 120)
-                                    .overlay(Text(item.0).bold())
-                                Text("\(item.1) coins")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Button(ownedItems.contains(item.0) ? "Owned" : "Buy") {
-                                    if ownedItems.contains(item.0) { return }
-                                    let price = item.1
-                                    let ok = userData.spendCoins(price)
-                                    if ok {
-                                        ownedItems.insert(item.0)
-                                    } else {
-                                        showNotEnoughAlert = true
+                                if let asset = item.assetName {
+                                    Image(asset).resizable().scaledToFit().frame(height: 80)
+                                } else {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.blue.opacity(0.08))
+                                        .frame(height: 80)
+                                        .overlay(Text(item.title).font(.caption).multilineTextAlignment(.center).padding(6))
+                                }
+
+                                Text(item.description).font(.caption2).multilineTextAlignment(.center).lineLimit(3)
+
+                                HStack {
+                                    Text("\(item.price) coins").font(.caption).foregroundColor(.secondary)
+                                    Spacer()
+                                    if item.oneTimePurchase && userData.ownedShopItemIDs.contains(item.id) {
+                                        Text("Owned").font(.caption2).foregroundColor(.green)
                                     }
                                 }
+
+                                Button(action: {
+                                    if item.oneTimePurchase && userData.ownedShopItemIDs.contains(item.id) { return }
+                                    let ok = userData.buyShopItem(item)
+                                    if ok {
+                                        lastBought = item.title
+                                    } else {
+                                        showNotEnough = true
+                                    }
+                                }) {
+                                    Text(item.oneTimePurchase && userData.ownedShopItemIDs.contains(item.id) ? "Owned" : "Buy")
+                                        .frame(maxWidth: .infinity)
+                                }
                                 .buttonStyle(.borderedProminent)
-                                .disabled(ownedItems.contains(item.0))
+                                .disabled(item.oneTimePurchase && userData.ownedShopItemIDs.contains(item.id))
                             }
                             .padding()
                             .background(RoundedRectangle(cornerRadius: 12).fill(.ultraThinMaterial))
@@ -62,12 +77,16 @@ struct ShopView: View {
                     }
                     .padding()
                 }
+
+                if let last = lastBought {
+                    Text("Bought: \(last)").font(.caption).foregroundColor(.secondary).padding(.bottom, 6)
+                }
             }
             .navigationTitle("Shop")
-            .alert("Not enough coins", isPresented: $showNotEnoughAlert) {
-                Button("OK", role: .cancel) { }
+            .alert("Not enough coins", isPresented: $showNotEnough) {
+                Button("OK", role: .cancel) {}
             } message: {
-                Text("Earn coins by completing sub-goals and goals.")
+                Text("Earn coins by completing subgoals and collecting production.")
             }
         }
     }

@@ -6,15 +6,12 @@
 //
 
 import SwiftUI
-
 struct AddSubGoalPopupView: View {
     @Environment(\.dismiss) private var dismiss
     var goalID: UUID
     var onAdd: (Subgoal) -> Void
-
     @State private var title: String = ""
     @State private var reward: Int = 10
-
     var body: some View {
         NavigationStack {
             Form {
@@ -29,9 +26,7 @@ struct AddSubGoalPopupView: View {
             }
             .navigationTitle("Add Sub-goal")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
                         let sub = Subgoal(title: title.trimmingCharacters(in: .whitespacesAndNewlines), coinReward: reward)

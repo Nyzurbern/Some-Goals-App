@@ -7,137 +7,215 @@
 
 import SwiftUI
 
-enum ActiveSheet: Identifiable {
-    case addGoal, addSubgoalFor(UUID), dueDatePopupFor(UUID)
-    var id: String {
-        switch self {
-        case .addGoal: return "addGoal"
-        case .addSubgoalFor(let id): return "addSub:\(id)"
-        case .dueDatePopupFor(let id): return "due:\(id)"
-        }
-    }
+struct GoalIDWrapper: Identifiable {
+    let id: UUID
 }
 
 struct HomeView: View {
     @EnvironmentObject var userData: UserData
-    @State private var activeSheet: ActiveSheet?
-
-    var overallProgress: Double {
-        guard !userData.goals.isEmpty else { return 0.0 }
-        let sum = userData.goals.reduce(0.0) { $0 + $1.progressFraction }
-        return sum / Double(userData.goals.count)
-    }
+    @State private var activeGoalToInspect: GoalIDWrapper?
+    @State private var showCompleted = false
 
     var body: some View {
         NavigationStack {
-            VStack {
-                header
-                actionRow
-                goalList
-            }
-            .navigationTitle("My Goals")
-            .sheet(item: $activeSheet) { sheet in
-                switch sheet {
-                case .addGoal:
-                    AddGoalPopupView { newGoal in
-                        userData.addGoal(newGoal)
-                        activeSheet = nil
-                    }
-                    .environmentObject(userData)
-                case .addSubgoalFor(let goalID):
-                    AddSubGoalPopupView(goalID: goalID) { newSub in
-                        userData.addSubgoal(to: goalID, subgoal: newSub)
-                        activeSheet = nil
-                    }
-                    .environmentObject(userData)
-                case .dueDatePopupFor(let goalID):
-                    DueDatePopupView(goalID: goalID)
-                        .environmentObject(userData)
+            ScrollView {
+                VStack(spacing: 24) {
+                    header
+                    missionsSection
+                    goalsSection
+                    islandSection
                 }
+                .padding(.vertical)
+            }
+            .navigationTitle("Island of Progress")
+            .sheet(item: $activeGoalToInspect) { wrapper in
+                GoalDetailView(goalID: wrapper.id) {
+                    activeGoalToInspect = nil
+                }
+                .environmentObject(userData)
             }
         }
     }
+}
 
+// MARK: - Header (Coins / XP / Morale)
+extension HomeView {
     private var header: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Coins")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text("\(userData.coins)")
-                        .font(.title)
-                        .bold()
-                        .foregroundStyle(.yellow)
-                }
-                Spacer()
-                VStack(alignment: .leading) {
-                    Text("Overall Progress")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    HStack {
-                        ProgressView(value: overallProgress)
-                            .frame(width: 160, height: 10)
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
-                        Text("\(Int(overallProgress * 100))%")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-            .padding(.horizontal)
-        }
-        .padding(.top)
-    }
-
-    private var actionRow: some View {
-        HStack {
-            Button {
-                activeSheet = .addGoal
-            } label: {
-                Label("Add Goal", systemImage: "plus.circle.fill")
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 14)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue))
-                    .foregroundStyle(.white)
-            }
+        HStack(spacing: 24) {
+            statBlock(title: "Coins", value: "\(userData.coins)", color: .yellow)
+            statBlock(title: "XP", value: "\(userData.xp)", color: .blue)
+            statBlock(title: "Morale", value: "\(userData.morale)", color: .green)
             Spacer()
         }
         .padding(.horizontal)
     }
 
-    private var goalList: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                ForEach(userData.goals.indices, id: \.self) { idx in
-                    let goal = userData.goals[idx]
-                    VStack {
-                        HStack {
-                            NavigationLink(destination: GoalDetailView(goalID: goal.id).environmentObject(userData)) {
-                                GoalCardView(goal: goal)
-                            }
-                        }
-                        HStack {
-                            Button("Add sub-goal") {
-                                activeSheet = .addSubgoalFor(goal.id)
-                            }
-                            Spacer()
-                            if goal.isOverdue {
-                                Button("Due actions") {
-                                    activeSheet = .dueDatePopupFor(goal.id)
-                                }
-                                .tint(.red)
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-            }
-            .padding()
+    private func statBlock(title: String, value: String, color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            Text(value)
+                .font(.title3)
+                .bold()
+                .foregroundStyle(color)
         }
     }
 }
 
-#Preview {
-    HomeView().environmentObject(UserData(sample: true))
+//Missions
+extension HomeView {
+    private var missionsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Daily Missions")
+                .font(.headline)
+                .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 14) {
+                    ForEach(userData.dailyMissions) { m in
+                        VStack(spacing: 6) {
+                            Text(m.title)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+
+                            Text(m.isCompletedToday ? "Done" : "\(m.rewardCoins)⍟")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+
+                            Button("Claim") {
+                                userData.completeDailyMission(m.id)
+                            }
+                            .buttonStyle(.bordered)
+                            .disabled(m.isCompletedToday)
+                        }
+                        .padding(10)
+                        .frame(width: 120)
+                        .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+}
+
+//Goals
+extension HomeView {
+    private var goalsSection: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text(showCompleted ? "Completed Goals" : "Active Goals")
+                    .font(.headline)
+                Spacer()
+
+                Picker("", selection: $showCompleted) {
+                    Text("Active").tag(false)
+                    Text("Completed").tag(true)
+                }
+                .pickerStyle(.segmented)
+                .frame(width: 180)
+            }
+            .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 14) {
+                    ForEach(userData.goals.filter {
+                        showCompleted ? $0.status == .completed : $0.status != .completed
+                    }) { g in
+                        GoalCardView(goal: g)
+                            .onTapGesture {
+                                activeGoalToInspect = GoalIDWrapper(id: g.id)
+                            }
+                    }
+
+                    if !showCompleted {
+                        addGoalButton
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+
+    private var addGoalButton: some View {
+        Button {
+            print("Add Goal Popup")
+        } label: {
+            VStack(spacing: 6) {
+                Image(systemName: "plus.circle")
+                    .font(.largeTitle)
+                Text("Add Goal")
+                    .font(.caption2)
+            }
+            .frame(width: 140, height: 120)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
+//Island Section
+extension HomeView {
+    private var islandSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Your Island")
+                    .font(.headline)
+                Spacer()
+                Button("Collect All") {
+                    _ = userData.collectAllBuildings()
+                }
+                .buttonStyle(.borderedProminent)
+                .font(.caption)
+            }
+            .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(userData.buildings) { b in
+                        VStack(spacing: 8) {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.green.opacity(0.1))
+                                .frame(width: 130, height: 90)
+                                .overlay(
+                                    Text(b.type.displayName)
+                                        .font(.caption)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal, 6)
+                                )
+
+                            Text("Lv \(b.level)")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(width: 130)
+                        .padding(10)
+                        .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }
+
+                    buyButton
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+
+    private var buyButton: some View {
+        Button {
+            print("Open Shop")
+        } label: {
+            VStack(spacing: 6) {
+                Image(systemName: "plus.circle")
+                    .font(.largeTitle)
+                Text("Buy")
+                    .font(.caption2)
+            }
+            .frame(width: 130, height: 120)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+    }
 }

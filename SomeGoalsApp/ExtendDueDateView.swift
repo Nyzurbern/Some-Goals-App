@@ -11,19 +11,17 @@ struct ExtendDueDateView: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.dismiss) var dismiss
     let goalID: UUID
-    @State private var daysToAdd: Int = 1
+    @State private var days: Int = 1
 
     var body: some View {
         NavigationStack {
             Form {
-                Stepper("Extend by \(daysToAdd) day(s)", value: $daysToAdd, in: 1...30)
-                Button("Apply Extension") {
-                    userData.extendDeadline(for: goalID, byDays: daysToAdd)
+                Stepper("Extend by \(days) day(s)", value: $days, in: 1...30)
+                Button("Apply") {
+                    userData.extendDeadline(for: goalID, byDays: days)
                     dismiss()
-                }
-                .buttonStyle(.borderedProminent)
-            }
-            .navigationTitle("Extend Deadline")
+                }.buttonStyle(.borderedProminent)
+            }.navigationTitle("Extend Deadline")
         }
     }
 }
