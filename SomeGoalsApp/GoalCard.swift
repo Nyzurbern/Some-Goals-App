@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct GoalCardView: View {
-    var goal: Goal
-    
+    let goal: Goal
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(goal.title)
@@ -23,18 +23,18 @@ struct GoalCardView: View {
                         .lineLimit(1)
                 }
                 Spacer()
-                Text("\(Int(goal.progress * 100))%")
+                Text(goal.percentString)
                     .bold()
             }
-            
+
             Text("Deadline: \(goal.deadline.formatted(.dateTime.month().day().year()))")
                 .font(.caption)
-                .foregroundColor(.secondary)
-            
-            ProgressView(value: goal.progress)
+                .foregroundColor(goal.isOverdue ? .red : .secondary)
+
+            ProgressView(value: goal.progressFraction)
                 .frame(height: 8)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
-            
+
             if !goal.subgoals.isEmpty {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Sub-goals")
@@ -59,14 +59,6 @@ struct GoalCardView: View {
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 14).fill(.ultraThinMaterial))
-        .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 4)
+        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 4)
     }
-}
-
-#Preview(traits: .sizeThatFitsLayout) {
-    GoalCardView(goal: Goal(title: "Example", description: "Quick test", deadline: Date(), subgoals: [
-        Subgoal(title: "A", isCompleted: true),
-        Subgoal(title: "B")
-    ], character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30)))
-        .padding()
 }

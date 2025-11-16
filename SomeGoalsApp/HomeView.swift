@@ -7,108 +7,133 @@
 
 import SwiftUI
 
+enum ActiveSheet: Identifiable {
+    case addGoal, addSubgoalFor(UUID), dueDatePopupFor(UUID)
+    var id: String {
+        switch self {
+        case .addGoal: return "addGoal"
+        case .addSubgoalFor(let id): return "addSub:\(id)"
+        case .dueDatePopupFor(let id): return "due:\(id)"
+        }
+    }
+}
+
 struct HomeView: View {
     @EnvironmentObject var userData: UserData
-    @State private var showAddGoal = false
-    @State private var showAddSubGoal = false
-    
-    // overall progress across goals
+    @State private var activeSheet: ActiveSheet?
+
     var overallProgress: Double {
         guard !userData.goals.isEmpty else { return 0.0 }
-        let sum = userData.goals.reduce(0.0) { $0 + $1.progress }
+        let sum = userData.goals.reduce(0.0) { $0 + $1.progressFraction }
         return sum / Double(userData.goals.count)
     }
-    
+
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 12) {
-                // Header + summary
-                HStack {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("My Goals")
-                            .font(.largeTitle)
-                            .bold()
-                        
-                        HStack(spacing: 20) {
-                            VStack(alignment: .leading) {
-                                Text("Coins")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text("\(userData.coins)")
-                                    .font(.title2)
-                                    .bold()
-                                    .foregroundStyle(.yellow)
-                            }
-                            
-                            VStack(alignment: .leading) {
-                                Text("Overall Progress")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                HStack {
-                                    ProgressView(value: overallProgress)
-                                        .frame(height: 8)
-                                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                                        .frame(width: 160)
-                                    Text("\(Int(overallProgress * 100))%")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                        }
+            VStack {
+                header
+                actionRow
+                goalList
+            }
+            .navigationTitle("My Goals")
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                case .addGoal:
+                    AddGoalPopupView { newGoal in
+                        userData.addGoal(newGoal)
+                        activeSheet = nil
                     }
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.top)
-                
-                // actions
-                HStack(spacing: 12) {
-                    Button {
-                        showAddGoal = true
-                    } label: {
-                        Label("Add Goal", systemImage: "plus.circle.fill")
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 14)
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue))
-                            .foregroundStyle(.white)
+                    .environmentObject(userData)
+                case .addSubgoalFor(let goalID):
+                    AddSubGoalPopupView(goalID: goalID) { newSub in
+                        userData.addSubgoal(to: goalID, subgoal: newSub)
+                        activeSheet = nil
                     }
-                    
-                   
-                    Spacer()
+                    .environmentObject(userData)
+                case .dueDatePopupFor(let goalID):
+                    DueDatePopupView(goalID: goalID)
+                        .environmentObject(userData)
                 }
-                .padding(.horizontal)
-                
-                // goal list
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(userData.goals.indices, id: \.self) { idx in
-                            let goal = userData.goals[idx]
-                            NavigationLink {
-                                BigGoalCharacterView()
-                            } label: {
-                                Image(goal.character.profileImage)
-                            }
-                            NavigationLink {
-                                // pass binding to the goal so edits apply to list
-                                GoalDetailView(goal: $userData.goals[idx])
-                                    .environmentObject(userData)
-                            } label: {
+            }
+        }
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Coins")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("\(userData.coins)")
+                        .font(.title)
+                        .bold()
+                        .foregroundStyle(.yellow)
+                }
+                Spacer()
+                VStack(alignment: .leading) {
+                    Text("Overall Progress")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    HStack {
+                        ProgressView(value: overallProgress)
+                            .frame(width: 160, height: 10)
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                        Text("\(Int(overallProgress * 100))%")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
+        .padding(.top)
+    }
+
+    private var actionRow: some View {
+        HStack {
+            Button {
+                activeSheet = .addGoal
+            } label: {
+                Label("Add Goal", systemImage: "plus.circle.fill")
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 14)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue))
+                    .foregroundStyle(.white)
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+    }
+
+    private var goalList: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                ForEach(userData.goals.indices, id: \.self) { idx in
+                    let goal = userData.goals[idx]
+                    VStack {
+                        HStack {
+                            NavigationLink(destination: GoalDetailView(goalID: goal.id).environmentObject(userData)) {
                                 GoalCardView(goal: goal)
                             }
                         }
+                        HStack {
+                            Button("Add sub-goal") {
+                                activeSheet = .addSubgoalFor(goal.id)
+                            }
+                            Spacer()
+                            if goal.isOverdue {
+                                Button("Due actions") {
+                                    activeSheet = .dueDatePopupFor(goal.id)
+                                }
+                                .tint(.red)
+                            }
+                        }
+                        .padding(.horizontal)
                     }
-                    .padding()
                 }
             }
-            .navigationTitle("")
-            .sheet(isPresented: $showAddGoal) {
-                AddGoalPopupView()
-                    .environmentObject(userData)
-            }
-            .sheet(isPresented: $showAddSubGoal) {
-                AddSubGoalPopupView()
-                    .environmentObject(userData)
-            }
+            .padding()
         }
     }
 }

@@ -8,41 +8,32 @@ import SwiftUI
 
 struct FailOrSuccessView: View {
     @EnvironmentObject var userData: UserData
-    @State private var FinalReflectionDone = false
-    @State private var reflection = ""
-    var body: some View {
-        VStack {
-            Text("How does it feel to have achieved your goal? What were some limitations you faced and how did you overcome it?")
-                .frame(width: 350)
-                .bold()
-                .font(.title3)
-            
-            TextField("Your reflection..", text: $reflection)
-                .frame(width: 350)
-                .textFieldStyle(.roundedBorder)
-        }
-        .padding(40)
-        
-        Text("See how far your character has come!")
-            .frame(width: 350)
-            .bold()
-            .font(.title3)
-        
-        Button {
-            FinalReflectionDone = true
-        } label: {
-            Text("Next")
-                .padding(.vertical, 10)
-                .padding(.horizontal, 14)
-                .background(RoundedRectangle(cornerRadius: 10) .fill(Color.blue))
-                .foregroundStyle(.white)
-        }
-        .navigationTitle("")
-        .sheet(isPresented: $FinalReflectionDone) {
-            HomeView().environmentObject(userData)}
-    }
-}
+    @Environment(\.dismiss) var dismiss
+    let goalID: UUID
+    @State private var reflectionText: String = ""
 
-#Preview {
-    FailOrSuccessView()
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 12) {
+                Text("Write a short reflection about completion")
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                TextEditor(text: $reflectionText)
+                    .frame(height: 140)
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
+
+                Button("Submit & Mark Complete") {
+                    userData.addReflection(goalID: goalID, reflection: reflectionText)
+                    userData.markGoalCompleted(goalID)
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(reflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Complete Goal")
+        }
+    }
 }

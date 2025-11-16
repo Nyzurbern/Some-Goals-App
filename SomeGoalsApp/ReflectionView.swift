@@ -11,16 +11,10 @@ struct ReflectionView: View {
     @EnvironmentObject var userData: UserData
     @State private var selectedIndex: Int = 0
     @State private var newReflection: String = ""
-    
+
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Reflection Journal")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(.horizontal)
-                    .padding(.top)
-                
+            VStack {
                 if userData.goals.isEmpty {
                     Text("No goals yet. Add a goal from Home to start reflecting.")
                         .foregroundColor(.secondary)
@@ -33,8 +27,8 @@ struct ReflectionView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .padding(.horizontal)
-                    
+                    .padding()
+
                     ScrollView {
                         VStack(alignment: .leading, spacing: 8) {
                             ForEach(userData.goals[selectedIndex].reflections, id: \.self) { r in
@@ -47,29 +41,25 @@ struct ReflectionView: View {
                         }
                         .padding(.top)
                     }
-                    
+
                     TextEditor(text: $newReflection)
                         .frame(height: 120)
                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
                         .padding()
-                    
+
                     Button("Add Reflection") {
                         let t = newReflection.trimmingCharacters(in: .whitespacesAndNewlines)
                         guard !t.isEmpty else { return }
-                        userData.goals[selectedIndex].reflections.append(t)
+                        let goal = userData.goals[selectedIndex]
+                        userData.addReflection(goalID: goal.id, reflection: t)
                         newReflection = ""
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.blue)
                     .padding(.horizontal)
-                    
-                    Spacer()
                 }
             }
+            .navigationTitle("Reflection Journal")
         }
     }
-}
-
-#Preview {
-    ReflectionView().environmentObject(UserData(sample: true))
 }

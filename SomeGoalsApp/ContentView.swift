@@ -8,27 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var userData = UserData(sample: false) // set true for sample data
-    
+    @StateObject var userData = UserData(sample: false)
+
     var body: some View {
         TabView {
             HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
+                .tabItem { Label("Home", systemImage: "house.fill") }
                 .environmentObject(userData)
-            
+
             ReflectionView()
-                .tabItem {
-                    Label("Reflection", systemImage: "book.fill")
-                }
+                .tabItem { Label("Reflection", systemImage: "book.fill") }
                 .environmentObject(userData)
-            
+
             ShopView()
-                .tabItem {
-                    Label("Shop", systemImage: "cart.fill")
-                }
+                .tabItem { Label("Shop", systemImage: "cart.fill") }
                 .environmentObject(userData)
+        }
+        .onAppear {
+            userData.checkDeadlinesAndExpire()
         }
     }
 }
@@ -36,4 +33,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-
