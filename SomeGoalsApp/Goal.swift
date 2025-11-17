@@ -43,6 +43,7 @@ struct Character: Identifiable, Hashable, Codable {
 
 struct Consumable: Identifiable, Hashable, Codable {
     var id = UUID()
+    var name: String
     var dftype: String
     var image: String
     var cost: Int

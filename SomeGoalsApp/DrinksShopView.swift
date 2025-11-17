@@ -11,11 +11,17 @@ struct DrinksShopView: View {
     @EnvironmentObject var userData: UserData
     @Binding var goal: Goal
     
+//    let items = [
+//        ("", 100),
+//        ("Avatar Jacket", 200),
+//        ("Background Theme", 300),
+//        ("Special Badge", 500)
+//    ]
+//    
     let items = [
-        ("", 100),
-        ("Avatar Jacket", 200),
-        ("Background Theme", 300),
-        ("Special Badge", 500)
+        Consumable(name: "Water", dftype: "Drink", image: "subject nobody", cost: 10, fillAmount: 30),
+        Consumable(name: "Coffee", dftype: "Drink", image: "subject nobody", cost: 20, fillAmount: 50),
+        Consumable(name: "Clorox", dftype: "Drink", image: "subject nobody", cost: 30, fillAmount: 30)
     ]
     
     var body: some View {
@@ -37,8 +43,8 @@ struct DrinksShopView: View {
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(Color.blue.opacity(0.12))
                                     .frame(height: 120)
-                                    .overlay(Text(item.0).bold())
-                                Text("\(item.1) coins")
+                                    .overlay(Text(item.name).bold())
+                                Text("\(item.cost) coins")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Button("Buy") {
