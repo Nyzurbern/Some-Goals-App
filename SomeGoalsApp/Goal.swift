@@ -40,3 +40,11 @@ struct Character: Identifiable, Hashable, Codable {
     var waterLevel: Int
     var foodLevel: Int
 }
+
+struct Consumable: Identifiable, Hashable, Codable {
+    var id = UUID()
+    var dftype: String
+    var image: String
+    var cost: Int
+    var fillAmount: Int
+}
