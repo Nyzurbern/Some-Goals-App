@@ -83,6 +83,19 @@ struct BigGoalCharacterView: View {
                             .frame(height: 41.5)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
+                    NavigationStack {
+                        HStack {
+                            NavigationLink {
+                                AddSubGoalPopupView()
+                            } label: {
+                                Text("Create a subgoal!")
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
                 }
             }
             VStack(alignment: .leading, spacing: 10) {
@@ -92,66 +105,82 @@ struct BigGoalCharacterView: View {
                     Spacer()
                 }
                 
-                ForEach(goal.subgoals.indices, id: \.self) { i in
-                    subgoalRow(index: i)
-                }
-                
-                // Use NavigationLink only; assume a parent NavigationStack exists.
-                HStack {
-                    NavigationLink {
-                        AddSubGoalPopupView()
-                            .environmentObject(userData)
-                    } label: {
-                        Text("Create a subgoal!")
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
-                }
-            }
-        }
-    }
-    private func subgoalRow(index i: Int) -> some View {
-        HStack {
-            Button {
-                goal.subgoals[i].isCompleted.toggle()
-                if goal.subgoals[i].isCompleted {
-                    userData.goals = userData.goals.map { g in
-                        if g.id == goal.id {
-                            var updated = g
-                            updated.coins += goal.subgoals[i].coinReward
-                            return updated
+                ForEach($goal.subgoals, id: \.self) { $subgoal in
+                    HStack {
+                        Button {
+                            // toggle completion
+                            $subgoal.isCompleted.wrappedValue.toggle()
+                            if subgoal.isCompleted {
+                                goal.coins +=
+                                subgoal.coinReward
+                            } else {
+                                // if unchecking, optionally deduct coins or leave as-is
+                            }
+                        } label: {
+                            Image(
+                                systemName: subgoal.isCompleted
+                                ? "checkmark.circle.fill" : "circle"
+                            )
+                            .foregroundColor(
+                                subgoal.isCompleted
+                                ? .green : .primary
+                            )
                         }
-                        return g
+                        
+                        TextField("Sub-goal", text: $subgoal.title)
+                        
+                        Spacer()
+                        
+                        Button {
+                            // remove subgoal
+                            goal.subgoals.removeAll { $0.id == subgoal.id }
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundColor(.red)
+                        }
                     }
-                    // Also update local binding to reflect coins change immediately
-                    goal.coins += goal.subgoals[i].coinReward
-                } else {
-                    // No coin deduction on uncheck (as per comment)
                 }
-            } label: {
-                Image(systemName: goal.subgoals[i].isCompleted ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(goal.subgoals[i].isCompleted ? .green : .primary)
-            }
-            
-            TextField("Sub-goal", text: $goal.subgoals[i].title)
-            
-            Spacer()
-            
-            Button {
-                goal.subgoals.remove(at: i)
-            } label: {
-                Image(systemName: "trash")
-                    .foregroundColor(.red)
             }
         }
         .padding(8)
         .background(Color.gray.opacity(0.06))
         .cornerRadius(10)
     }
+    //    private func subgoalRow(index i: Int) -> some View {
+    //        HStack {
+    //            Button {
+    //                goal.subgoals[i].isCompleted.toggle()
+    //                if goal.subgoals[i].isCompleted {
+    //                    userData.goals = userData.goals.map { g in
+    //                        if g.id == goal.id {
+    //                            var updated = g
+    //                            updated.coins += goal.subgoals[i].coinReward
+    //                            return updated
+    //                        }
+    //                        return g
+    //                    }
+    //                    // Also update local binding to reflect coins change immediately
+    //                    goal.coins += goal.subgoals[i].coinReward
+    //                } else {
+    //                    // No coin deduction on uncheck (as per comment)
+    //                }
+    //            } label: {
+    //                Image(systemName: goal.subgoals[i].isCompleted ? "checkmark.circle.fill" : "circle")
+    //                    .foregroundColor(goal.subgoals[i].isCompleted ? .green : .primary)
+    //            }
+    //
+    //            TextField("Sub-goal", text: $goal.subgoals[i].title)
+    //
+    //            Spacer()
+    //
+    //            Button {
+    //                goal.subgoals.remove(at: i)
+    //            } label: {
+    //                Image(systemName: "trash")
+    //                    .foregroundColor(.red)
+    //            }
+    //        }
 }
-
 
 #Preview {
     BigGoalCharacterView(
