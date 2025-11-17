@@ -23,6 +23,7 @@ struct Goal: Identifiable, Hashable, Codable {
     var isCompleted: Bool = false
     var reflections: [String] = []
     var character: Character
+    var coins: Int
     
 
     var progress: Double {

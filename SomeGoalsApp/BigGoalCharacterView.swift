@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct BigGoalCharacterView: View {
+    @EnvironmentObject var userData: UserData
     @State private var foodRectWidth: CGFloat = 30
     @State private var waterRectWidth: CGFloat = 30
+    @Binding var goal: Goal
     var body: some View {
         ScrollView{
             VStack{
-                Text("Character")
+                Text("Due Date: ")
                     .bold()
                     .font(.title)
                 Image("subject nobody")
@@ -83,10 +85,87 @@ struct BigGoalCharacterView: View {
                     }
                 }
             }
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text("Sub-goals")
+                        .font(.headline)
+                    Spacer()
+                }
+                
+                ForEach(goal.subgoals.indices, id: \.self) { i in
+                    subgoalRow(index: i)
+                }
+                
+                // Use NavigationLink only; assume a parent NavigationStack exists.
+                HStack {
+                    NavigationLink {
+                        AddSubGoalPopupView()
+                            .environmentObject(userData)
+                    } label: {
+                        Text("Create a subgoal!")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                }
+            }
         }
+    }
+    private func subgoalRow(index i: Int) -> some View {
+        HStack {
+            Button {
+                goal.subgoals[i].isCompleted.toggle()
+                if goal.subgoals[i].isCompleted {
+                    userData.goals = userData.goals.map { g in
+                        if g.id == goal.id {
+                            var updated = g
+                            updated.coins += goal.subgoals[i].coinReward
+                            return updated
+                        }
+                        return g
+                    }
+                    // Also update local binding to reflect coins change immediately
+                    goal.coins += goal.subgoals[i].coinReward
+                } else {
+                    // No coin deduction on uncheck (as per comment)
+                }
+            } label: {
+                Image(systemName: goal.subgoals[i].isCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(goal.subgoals[i].isCompleted ? .green : .primary)
+            }
+            
+            TextField("Sub-goal", text: $goal.subgoals[i].title)
+            
+            Spacer()
+            
+            Button {
+                goal.subgoals.remove(at: i)
+            } label: {
+                Image(systemName: "trash")
+                    .foregroundColor(.red)
+            }
+        }
+        .padding(8)
+        .background(Color.gray.opacity(0.06))
+        .cornerRadius(10)
     }
 }
 
+
 #Preview {
-    BigGoalCharacterView()
+    BigGoalCharacterView(
+        goal: .constant(
+            Goal(
+                title: "Test",
+                description: "Desc",
+                deadline: Date(),
+                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")],
+                isCompleted: false,
+                reflections: [],
+                character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30),
+                coins: 10
+            )
+        )
+    )
 }

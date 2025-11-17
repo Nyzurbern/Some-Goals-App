@@ -31,16 +31,6 @@ struct HomeView: View {
                         
                         HStack(spacing: 20) {
                             VStack(alignment: .leading) {
-                                Text("Coins")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text("\(userData.coins)")
-                                    .font(.title2)
-                                    .bold()
-                                    .foregroundStyle(.yellow)
-                            }
-                            
-                            VStack(alignment: .leading) {
                                 Text("Overall Progress")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
@@ -81,16 +71,16 @@ struct HomeView: View {
                 // goal list
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(userData.goals.indices, id: \.self) { idx in
-                            let goal = userData.goals[idx]
+                        ForEach($userData.goals, id: \.self) { $goal in
+                        
                             NavigationLink {
-                                BigGoalCharacterView()
+                                BigGoalCharacterView(goal: $goal)
                             } label: {
                                 Image(goal.character.profileImage)
                             }
                             NavigationLink {
                                 // pass binding to the goal so edits apply to list
-                                GoalDetailView(goal: $userData.goals[idx])
+                                BigGoalCharacterView(goal: $goal)
                                     .environmentObject(userData)
                             } label: {
                                 GoalCardView(goal: goal)

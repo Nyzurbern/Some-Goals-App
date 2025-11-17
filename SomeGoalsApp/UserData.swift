@@ -9,7 +9,6 @@ import Foundation
 import Combine
 
 final class UserData: ObservableObject {
-    @Published var coins: Int = 0
     @Published var goals: [Goal] = []
     
     init(sample: Bool = false) {
@@ -23,9 +22,8 @@ final class UserData: ObservableObject {
                         Subgoal(title: "Draft", coinReward: 20),
                         Subgoal(title: "Proofread", coinReward: 10)
                      ],
-                     reflections: ["Start early next time"], character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30))
+                     reflections: ["Start early next time"], character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30), coins: 10)
             ]
-            coins = 0
         }
     }
 }

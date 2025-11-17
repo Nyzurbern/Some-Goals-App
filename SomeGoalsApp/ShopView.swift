@@ -26,7 +26,7 @@ struct ShopView: View {
                         .bold()
                         .padding(.top)
                     
-                    Text("Coins: \(userData.coins)")
+                    Text("Coins: ")
                         .font(.title2)
                         .foregroundStyle(.yellow)
                     
@@ -41,12 +41,12 @@ struct ShopView: View {
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Button("Buy") {
-                                    if userData.coins >= item.1 {
-                                        userData.coins -= item.1
-                                        // handle buy: unlock or mark owned
-                                    } else {
-                                        // insufficient coins - could show alert
-                                    }
+//                                    if userData.coins >= item.1 {
+//                                        userData.coins -= item.1
+//                                        // handle buy: unlock or mark owned
+//                                    } else {
+//                                        // insufficient coins - could show alert
+//                                    }
                                 }
                                 .buttonStyle(.borderedProminent)
                             }
