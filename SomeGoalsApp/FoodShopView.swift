@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ShopView: View {
+struct FoodShopView: View {
     @EnvironmentObject var userData: UserData
     
     let items = [
@@ -62,5 +62,5 @@ struct ShopView: View {
 }
 
 #Preview {
-    ShopView().environmentObject(UserData(sample: true))
+    FoodShopView().environmentObject(UserData(sample: true))
 }
