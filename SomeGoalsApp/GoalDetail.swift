@@ -114,6 +114,8 @@
 //
 //                // deadline
 //                VStack(alignment: .leading, spacing: 6) {
+//                    Text("Deadline")
+//                        .font(.headline)
 //                    DatePicker(
 //                        "Deadline",
 //                        selection: $goal.deadline,
@@ -261,6 +263,11 @@
 //                description: "Desc",
 //                deadline: Date(),
 //                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")], character: Character(profileImage: "Subject 3" ,image: "subject nobody", waterLevel: 30, foodLevel: 30)
+//                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")],
+//                isCompleted: false,
+//                reflections: [],
+//                character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30),
+//                coins: 10
 //            )
 //        )
 //    )
