@@ -73,10 +73,6 @@ struct HomeView: View {
                 AddGoalPopupView()
                     .environmentObject(userData)
             }
-            .sheet(isPresented: $showAddSubGoal) {
-                AddSubGoalPopupView()
-                    .environmentObject(userData)
-            }
         }
     }
 }

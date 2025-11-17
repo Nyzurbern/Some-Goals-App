@@ -11,7 +11,7 @@ struct AddSubGoalPopupView: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.dismiss) var dismiss
     
-    @State private var selectedIndex: Int = 0
+    @Binding var goal: Goal
     @State private var title: String = ""
     @State private var reward: Int = 10
     @State var SubGoalDeadline:Date = Date()
@@ -36,7 +36,7 @@ struct AddSubGoalPopupView: View {
                     Button("Add") {
                         guard !userData.goals.isEmpty else { return }
                         let s = Subgoal(title: title, coinReward: reward)
-                        userData.goals[selectedIndex].subgoals.append(s)
+                        goal.subgoals.append(s)
                         dismiss()
                     }
                     .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty || userData.goals.isEmpty)
@@ -45,8 +45,7 @@ struct AddSubGoalPopupView: View {
         }
     }
 }
-
-#Preview {
-    AddSubGoalPopupView()
-        .environmentObject(UserData(sample: true))
-}
+//#Preview {
+//    AddSubGoalPopupView(goal: Goa)
+//        .environmentObject(UserData(sample: true))
+//}
