@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ReflectionView: View {
+struct ReflectionArchive: View {
     @EnvironmentObject var userData: UserData
     @State private var selectedIndex: Int = 0
     @State private var newReflection: String = ""
@@ -71,5 +71,5 @@ struct ReflectionView: View {
 }
 
 #Preview {
-    ReflectionView().environmentObject(UserData(sample: true))
+    ReflectionArchive().environmentObject(UserData(sample: true))
 }
