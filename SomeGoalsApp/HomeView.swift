@@ -13,11 +13,6 @@ struct HomeView: View {
     @State private var showAddSubGoal = false
     
     // overall progress across goals
-    var overallProgress: Double {
-        guard !userData.goals.isEmpty else { return 0.0 }
-        let sum = userData.goals.reduce(0.0) { $0 + $1.progress }
-        return sum / Double(userData.goals.count)
-    }
     
     var body: some View {
         NavigationStack {
@@ -38,21 +33,6 @@ struct HomeView: View {
                                     .font(.title2)
                                     .bold()
                                     .foregroundStyle(.yellow)
-                            }
-                            
-                            VStack(alignment: .leading) {
-                                Text("Overall Progress")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                HStack {
-                                    ProgressView(value: overallProgress)
-                                        .frame(height: 8)
-                                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                                        .frame(width: 160)
-                                    Text("\(Int(overallProgress * 100))%")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
                             }
                         }
                     }
@@ -82,18 +62,12 @@ struct HomeView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(userData.goals.indices, id: \.self) { idx in
-                            let goal = userData.goals[idx]
-                            NavigationLink {
-                                BigGoalCharacterView()
-                            } label: {
-                                Image(goal.character.profileImage)
-                            }
                             NavigationLink {
                                 // pass binding to the goal so edits apply to list
                                 GoalDetailView(goal: $userData.goals[idx])
                                     .environmentObject(userData)
                             } label: {
-                                GoalCardView(goal: goal)
+                                GoalCardView(goal: userData.goals[idx])
                             }
                         }
                     }
@@ -116,3 +90,4 @@ struct HomeView: View {
 #Preview {
     HomeView().environmentObject(UserData(sample: true))
 }
+

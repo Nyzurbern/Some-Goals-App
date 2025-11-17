@@ -18,15 +18,9 @@ struct ContentView: View {
                 }
                 .environmentObject(userData)
             
-            ReflectionView()
+            ReflectionArchive()
                 .tabItem {
-                    Label("Reflection", systemImage: "book.fill")
-                }
-                .environmentObject(userData)
-            
-            ShopView()
-                .tabItem {
-                    Label("Shop", systemImage: "cart.fill")
+                    Label("Archive", systemImage: "book.fill")
                 }
                 .environmentObject(userData)
         }

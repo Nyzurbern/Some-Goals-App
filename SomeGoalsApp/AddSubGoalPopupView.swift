@@ -14,7 +14,7 @@ struct AddSubGoalPopupView: View {
     @State private var selectedIndex: Int = 0
     @State private var title: String = ""
     @State private var reward: Int = 10
-    
+    @State var SubGoalDeadline:Date = Date()
     var body: some View {
         NavigationStack {
             Form {
@@ -22,18 +22,11 @@ struct AddSubGoalPopupView: View {
                     Text("Add a goal first to attach sub-goals.")
                         .foregroundColor(.secondary)
                 } else {
-                    Section(header: Text("Parent Goal")) {
-                        Picker("Goal", selection: $selectedIndex) {
-                            ForEach(userData.goals.indices, id: \.self) { idx in
-                                Text(userData.goals[idx].title).tag(idx)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                    }
                     
-                    Section(header: Text("Sub-goal")) {
+                    Section{
                         TextField("Title", text: $title)
                         Text("Reward: \(reward) coins")
+                        DatePicker("Deadline", selection: $SubGoalDeadline, displayedComponents: .date)
                     }
                 }
             }
