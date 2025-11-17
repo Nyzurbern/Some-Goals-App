@@ -23,18 +23,6 @@ struct HomeView: View {
                         Text("My Goals")
                             .font(.largeTitle)
                             .bold()
-                        
-                        HStack(spacing: 20) {
-                            VStack(alignment: .leading) {
-                                Text("Coins")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text("\(userData.coins)")
-                                    .font(.title2)
-                                    .bold()
-                                    .foregroundStyle(.yellow)
-                            }
-                        }
                     }
                     Spacer()
                 }
@@ -73,7 +61,7 @@ struct HomeView: View {
                                 BigGoalCharacterView(goal: $goal)
                                     .environmentObject(userData)
                             } label: {
-                                GoalCardView(goal: userData.goals[idx])
+                                GoalCardView(goal: goal)
                             }
                         }
                     }
