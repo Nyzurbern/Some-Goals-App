@@ -7,6 +7,27 @@
 
 import Foundation
 
+class GoalManager: ObservableObject {
+    @Published var goal = Goal(
+        title: "Test",
+        description: "Desc",
+        deadline: Date(),
+        subgoals: [Subgoal(title: "A"), Subgoal(title: "B")],
+        isCompleted: false,
+        reflections: [],
+        character: Character(
+            profileImage: "Subject 3",
+            image: "subject nobody",
+            waterLevel: 30,
+            foodLevel: 30
+        ),
+        coins: 10
+    )
+    init(goal: Goal){
+        self.goal = goal
+    }
+}
+
 struct Subgoal: Identifiable, Hashable, Codable {
     var id = UUID()
     var title: String

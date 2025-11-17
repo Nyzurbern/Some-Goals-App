@@ -48,12 +48,13 @@ struct DrinksShopView: View {
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Button("Buy") {
-//                                    if userData.coins >= item.1 {
-//                                        userData.coins -= item.1
-//                                        // handle buy: unlock or mark owned
-//                                    } else {
-//                                        // insufficient coins - could show alert
-//                                    }
+                                    if goal.coins >= item.cost {
+                                        goal.coins = goal.coins - item.cost
+                                        print(goal.coins)
+                                    } else {
+                                        goal.coins = 100
+                                        print(goal.coins)
+                                    }
                                 }
                                 .buttonStyle(.borderedProminent)
                             }
