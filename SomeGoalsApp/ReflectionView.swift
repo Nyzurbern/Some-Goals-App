@@ -10,25 +10,33 @@ import SwiftUI
 struct ReflectionView: View {
     @EnvironmentObject var userData: UserData
     @State private var selectedIndex: Int = 0
-    @State private var newReflection = ""
-
+    @State private var newReflection: String = ""
+    
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Reflection Journal")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.horizontal)
+                    .padding(.top)
+                
                 if userData.goals.isEmpty {
-                    Text("No goals yet").foregroundColor(.secondary).padding()
+                    Text("No goals yet. Add a goal from Home to start reflecting.")
+                        .foregroundColor(.secondary)
+                        .padding()
                     Spacer()
                 } else {
                     Picker("Goal", selection: $selectedIndex) {
-                        ForEach(userData.goals.indices, id: \.self) { i in
-                            Text(userData.goals[i].title).tag(i)
+                        ForEach(userData.goals.indices, id: \.self) { idx in
+                            Text(userData.goals[idx].title).tag(idx)
                         }
                     }
                     .pickerStyle(.segmented)
-                    .padding()
-
+                    .padding(.horizontal)
+                    
                     ScrollView {
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 8) {
                             ForEach(userData.goals[selectedIndex].reflections, id: \.self) { r in
                                 Text("• \(r)")
                                     .padding(8)
@@ -39,24 +47,29 @@ struct ReflectionView: View {
                         }
                         .padding(.top)
                     }
-
+                    
                     TextEditor(text: $newReflection)
                         .frame(height: 120)
                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
                         .padding()
-
+                    
                     Button("Add Reflection") {
-                        let trimmed = newReflection.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !trimmed.isEmpty else { return }
-                        let goalID = userData.goals[selectedIndex].id
-                        userData.addReflection(goalID: goalID, reflection: trimmed)
+                        let t = newReflection.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !t.isEmpty else { return }
+                        userData.goals[selectedIndex].reflections.append(t)
                         newReflection = ""
                     }
                     .buttonStyle(.borderedProminent)
+                    .tint(.blue)
                     .padding(.horizontal)
+                    
+                    Spacer()
                 }
             }
-            .navigationTitle("Reflections")
         }
     }
+}
+
+#Preview {
+    ReflectionView().environmentObject(UserData(sample: true))
 }

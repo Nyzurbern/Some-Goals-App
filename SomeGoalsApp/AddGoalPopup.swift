@@ -6,32 +6,69 @@
 //
 
 import SwiftUI
+
 struct AddGoalPopupView: View {
-    @Environment(\.dismiss) private var dismiss
-    var onAdd: (Goal) -> Void
-    @State private var title = ""
-    @State private var description = ""
-    @State private var deadline = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+    @EnvironmentObject var userData: UserData
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var title: String = ""
+    @State private var description: String = ""
+    @State private var deadline: Date = Date()
+    @State private var reward: Int = 50
+    @State private var image: String = "subject nobody"
+    @State private var profileImage: String = "Subject 3"
+    
     var body: some View {
         NavigationStack {
             Form {
-                Section("Goal") {
+                Section(header: Text("Goal Details")) {
                     TextField("Title", text: $title)
-                    TextField("Description", text: $description)
-                    DatePicker("Deadline", selection: $deadline, in: Date()..., displayedComponents: .date)
+                        .textInputAutocapitalization(.sentences)
+                    TextField("Short description", text: $description)
+                        .textInputAutocapitalization(.sentences)
+                    DatePicker("Deadline", selection: $deadline, displayedComponents: .date)
+                }
+                
+                Section(header: Text("Reward")) {
+                    Text("Coin reward: \(reward)")
+                }
+                
+                Section(header: Text("Character")) {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            Button{
+                                image = "subject nobody"
+                                profileImage = "Subject 3"
+                            }label: {
+                                Image("Subject 3")
+                            }
+                            Button{
+                                image = "subject nobody"
+                                profileImage = "Subject 3"
+                            }label: {
+                                Image("Subject 3")
+                            }
+                        }
+                    }
                 }
             }
             .navigationTitle("Add Goal")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        let goal = Goal(title: title.trimmingCharacters(in: .whitespacesAndNewlines), description: description.trimmingCharacters(in: .whitespacesAndNewlines), deadline: deadline)
-                        onAdd(goal)
+                        let g = Goal(title: title, description: description, deadline: deadline, subgoals: [], reflections: [], character: Character(profileImage: profileImage, image: image, waterLevel: 30, foodLevel: 30))
+                        userData.goals.append(g)
                         dismiss()
-                    }.disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                    .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
         }
     }
+    
 }
+
+    #Preview {
+        AddGoalPopupView()
+            .environmentObject(UserData(sample: true))
+    }

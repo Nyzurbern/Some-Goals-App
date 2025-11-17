@@ -8,47 +8,54 @@
 import SwiftUI
 
 struct DueDatePopupView: View {
+    
     @EnvironmentObject var userData: UserData
-    @Environment(\.dismiss) var dismiss
-    let goalID: UUID
-    @State private var active: ActiveAction?
-
-    private enum ActiveAction: Identifiable {
-        case extend, reflect
-        var id: Int { self == .extend ? 1 : 2 }
-    }
-
+    @State private var FailedGoal = false
+    @State private var ExtendDueDate = false
+    @State private var ICompletedMyGoal = false
+    
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                Text("This goal is overdue or nearing deadline. Choose an action.")
-                    .font(.headline).multilineTextAlignment(.center).padding()
-                HStack(spacing: 12) {
-                    Button(role: .destructive) {
-                        if let idx = userData.goals.firstIndex(where: { $0.id == goalID }) {
-                            var g = userData.goals[idx]
-                            g.status = .expired
-                            userData.updateGoal(g)
-                        }
-                        dismiss()
-                    } label: {
-                        Text("Fail it").frame(maxWidth: .infinity).padding().background(RoundedRectangle(cornerRadius: 10).fill(Color.red)).foregroundStyle(.white)
-                    }
-                    Button { active = .extend } label: {
-                        Text("Extend date").frame(maxWidth: .infinity).padding().background(RoundedRectangle(cornerRadius: 10).fill(Color.yellow)).foregroundStyle(.white)
-                    }
+            
+            VStack(spacing: 12) {
+                Button {
+                    FailedGoal = true
+                } label: {
+                    Text("I didn't manage to do it..")
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 14)
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.red))
+                        .foregroundStyle(.white)
                 }
-                Button { active = .reflect } label: {
-                    Text("I completed it (reflect)").frame(maxWidth: .infinity).padding().background(RoundedRectangle(cornerRadius: 10).fill(Color.green)).foregroundStyle(.white)
+                Button {
+                    ExtendDueDate = true
+                } label: {
+                    Text("Let me extend the date papi!")
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 14)
+                        .background(RoundedRectangle(cornerRadius: 10) .fill(Color.yellow))
+                        .foregroundStyle(.white)
                 }
-                Spacer()
-            }.padding().navigationTitle("Deadline Actions")
-            .sheet(item: $active) { act in
-                switch act {
-                case .extend: ExtendDueDateView(goalID: goalID).environmentObject(userData)
-                case .reflect: FailOrSuccessView(goalID: goalID).environmentObject(userData)
+                Button {
+                    ICompletedMyGoal = true
+                } label: {
+                    Text("I completed my goal!!!!")
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 14)
+                        .background(RoundedRectangle(cornerRadius: 10) .fill(Color.green))
+                        .foregroundStyle(.white)
                 }
             }
+            .navigationTitle("")
+            .sheet(isPresented: $FailedGoal) {
+                FailOrSuccessView()}
+            .sheet(isPresented: $ExtendDueDate) {
+                ExtendDueDateView()}
+            .sheet(isPresented: $ICompletedMyGoal) {FailOrSuccessView()}
         }
     }
+}
+
+#Preview {
+    DueDatePopupView()
 }

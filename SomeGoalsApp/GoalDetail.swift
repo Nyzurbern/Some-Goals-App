@@ -9,96 +9,190 @@ import SwiftUI
 
 struct GoalDetailView: View {
     @EnvironmentObject var userData: UserData
-    let goalID: UUID
-    var onComplete: (() -> Void)? // optional callback when goal is marked complete
+    @Binding var goal: Goal
 
+    @State private var newSubTitle: String = ""
     @State private var newReflection: String = ""
-    @State private var showExtendConfirm: Bool = false
-    @State private var showAddSubgoalSheet = false
-
-    private var goalIndex: Int? { userData.goals.firstIndex(where: { $0.id == goalID }) }
-    private var goal: Goal? { guard let i = goalIndex else { return nil }; return userData.goals[i] }
 
     var body: some View {
-        VStack {
-            if let g = goal {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(g.title).font(.title2).bold()
-                        Text(g.description).foregroundColor(.secondary)
-
-                        HStack {
-                            Text("Deadline:")
-                            Spacer()
-                            Text(g.deadline, style: .date).foregroundColor(g.isOverdue ? .red : .primary)
-                        }
-
-                        ProgressView(value: g.progressFraction).frame(height: 12)
-                        Text(g.percentString).font(.caption).foregroundColor(.secondary)
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Sub-goals").font(.headline)
-                            ForEach(g.subgoals) { s in
-                                HStack {
-                                    Button {
-                                        userData.toggleSubgoalCompletion(goalID: g.id, subgoalID: s.id)
-                                    } label: {
-                                        Image(systemName: s.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(s.isCompleted ? .green : .primary)
-                                    }
-                                    TextField("Subgoal", text: Binding(
-                                        get: { s.title },
-                                        set: { newVal in userData.updateSubgoalTitle(goalID: g.id, subgoalID: s.id, newTitle: newVal) }
-                                    ))
-                                    Spacer()
-                                    Button { userData.removeSubgoal(goalID: g.id, subgoalID: s.id) } label: {
-                                        Image(systemName: "trash").foregroundColor(.red)
-                                    }
-                                }
-                                .padding(8)
-                                .background(Color.gray.opacity(0.06))
-                                .cornerRadius(8)
-                            }
-
-                            Button("Add Subgoal") { showAddSubgoalSheet = true }
-                                .buttonStyle(.borderedProminent)
-                                .sheet(isPresented: $showAddSubgoalSheet) {
-                                    AddSubGoalPopupView(goalID: g.id) { newSub in userData.addSubgoal(to: g.id, subgoal: newSub) }
-                                }
-                        }
-
-                        VStack(alignment: .leading) {
-                            Text("Reflections").font(.headline)
-                            ForEach(g.reflections, id: \.self) { r in
-                                Text("• \(r)").padding(8).background(Color.gray.opacity(0.07)).cornerRadius(8)
-                            }
-                            TextEditor(text: $newReflection).frame(height: 120).overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-                            Button("Add Reflection") {
-                                let trimmed = newReflection.trimmingCharacters(in: .whitespacesAndNewlines)
-                                guard !trimmed.isEmpty else { return }
-                                userData.addReflection(goalID: g.id, reflection: trimmed)
-                                newReflection = ""
-                            }.buttonStyle(.borderedProminent)
-                        }
-
-                        HStack {
-                            Button("Extend +2d") { userData.extendDeadline(for: g.id, byDays: 2) }.buttonStyle(.bordered)
-                            Spacer()
-                            Button(role: .destructive) { showExtendConfirm = true } label: { Text("Mark Complete") }
-                        }
-                    }.padding()
-                }
-                .confirmationDialog("Confirm complete?", isPresented: $showExtendConfirm) {
-                    Button("Yes, complete") {
-                        let beforeDeadline = Date() <= g.deadline
-                        userData.markGoalCompleted(g.id, beforeDeadlineBonus: beforeDeadline)
-                        onComplete?()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                // title + coins
+                HStack {
+                    VStack(alignment: .leading, spacing: 6) {
+                        TextField("Title", text: $goal.title)
+                            .font(.title2.bold())
+                        TextField("Short description", text: $goal.description)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
-                    Button("Cancel", role: .cancel) {}
+                    Spacer()
+                    VStack {
+                        Text("Coins")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("\(userData.coins)")
+                            .font(.title3)
+                            .bold()
+                            .foregroundStyle(.yellow)
+                    }
                 }
-            } else {
-                Text("Goal not found").foregroundColor(.secondary)
+
+                // deadline
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Deadline")
+                        .font(.headline)
+                    DatePicker(
+                        "Deadline",
+                        selection: $goal.deadline,
+                        displayedComponents: .date
+                    )
+                    .datePickerStyle(.compact)
+                }
+
+                // progress
+                VStack(alignment: .leading) {
+                    Text("Progress")
+                        .font(.headline)
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.gray.opacity(0.2))
+                            .frame(height: 18)
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .frame(
+                                width: max(
+                                    10,
+                                    CGFloat(goal.progress)
+                                        * (UIScreen.main.bounds.width - 48)
+                                ),
+                                height: 18
+                            )
+                            .animation(.spring(), value: goal.progress)
+                    }
+                    Text("\(Int(goal.progress * 100))%")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                // subgoals
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Text("Sub-goals")
+                            .font(.headline)
+                        Spacer()
+                    }
+
+                    ForEach(goal.subgoals.indices, id: \.self) { i in
+                        HStack {
+                            Button {
+                                // toggle completion
+                                goal.subgoals[i].isCompleted.toggle()
+                                if goal.subgoals[i].isCompleted {
+                                    userData.coins +=
+                                        goal.subgoals[i].coinReward
+                                } else {
+                                    // if unchecking, optionally deduct coins or leave as-is
+                                }
+                            } label: {
+                                Image(
+                                    systemName: goal.subgoals[i].isCompleted
+                                        ? "checkmark.circle.fill" : "circle"
+                                )
+                                .foregroundColor(
+                                    goal.subgoals[i].isCompleted
+                                        ? .green : .primary
+                                )
+                            }
+
+                            TextField("Sub-goal", text: $goal.subgoals[i].title)
+
+                            Spacer()
+
+                            Button {
+                                // remove subgoal
+                                goal.subgoals.remove(at: i)
+                            } label: {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                            }
+                        }
+                        .padding(8)
+                        .background(Color.gray.opacity(0.06))
+                        .cornerRadius(10)
+                    }
+
+                    // add subgoal field
+                    NavigationStack {
+                        HStack {
+                            NavigationLink {
+                                AddSubGoalPopupView()
+                            } label: {
+                                Text("Create a subgoal!")
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
+                }
+
+                // reflections
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Reflections")
+                        .font(.headline)
+                    ForEach(goal.reflections, id: \.self) { ref in
+                        Text("• \(ref)")
+                            .padding(8)
+                            .background(Color.gray.opacity(0.07))
+                            .cornerRadius(8)
+                    }
+
+                    TextEditor(text: $newReflection)
+                        .frame(height: 110)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8).stroke(
+                                Color.gray.opacity(0.3)
+                            )
+                        )
+
+                    Button("Add Reflection") {
+                        let trimmed = newReflection.trimmingCharacters(
+                            in: .whitespacesAndNewlines
+                        )
+                        guard !trimmed.isEmpty else { return }
+                        goal.reflections.append(trimmed)
+                        newReflection = ""
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.blue)
+                }
+
+                Spacer(minLength: 40)
             }
+            .padding()
         }
+        .navigationTitle("Goal")
     }
+}
+
+#Preview {
+    GoalDetailView(
+        goal: .constant(
+            Goal(
+                title: "Test",
+                description: "Desc",
+                deadline: Date(),
+                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")], character: Character(profileImage: "Subject 3" ,image: "subject nobody", waterLevel: 30, foodLevel: 30)
+            )
+        )
+    )
+    .environmentObject(UserData(sample: true))
 }
