@@ -87,7 +87,7 @@ struct BigGoalCharacterView: View {
                 NavigationStack {
                     VStack {
                         NavigationLink {
-                            AddSubGoalPopupView()
+                            AddSubGoalPopupView(goal: $goal)
                         } label: {
                             Text("Create a subgoal!")
                                 .padding()
