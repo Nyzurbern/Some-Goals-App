@@ -11,7 +11,7 @@ struct FoodShopView: View {
     @EnvironmentObject var userData: UserData
     
     let items = [
-        ("Avatar Hat", 100),
+        ("", 100),
         ("Avatar Jacket", 200),
         ("Background Theme", 300),
         ("Special Badge", 500)
@@ -21,7 +21,7 @@ struct FoodShopView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    Text("Shop / Rewards")
+                    Text("Food Shop")
                         .font(.largeTitle)
                         .bold()
                         .padding(.top)
