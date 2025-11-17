@@ -11,7 +11,6 @@ struct HomeView: View {
     @EnvironmentObject var userData: UserData
     @State private var showAddGoal = false
     @State private var showAddSubGoal = false
-    
     // overall progress across goals
     
     var body: some View {
@@ -52,13 +51,13 @@ struct HomeView: View {
                         ForEach($userData.goals, id: \.self) { $goal in
                         
                             NavigationLink {
-                                BigGoalCharacterView(goal: $goal)
+                                BigGoalCharacterView(ViewModel: GoalViewModel(goal: goal))
                             } label: {
                                 Image(goal.character.profileImage)
                             }
                             NavigationLink {
                                 // pass binding to the goal so edits apply to list
-                                BigGoalCharacterView(goal: $goal)
+                                BigGoalCharacterView(ViewModel: GoalViewModel(goal: goal))
                                     .environmentObject(userData)
                             } label: {
                                 GoalCardView(goal: goal)
@@ -77,7 +76,7 @@ struct HomeView: View {
     }
 }
 
-#Preview {
-    HomeView().environmentObject(UserData(sample: true))
-}
+//#Preview {
+//    HomeView(ViewModel: GoalViewModel).environmentObject(UserData(sample: true))
+//}
 

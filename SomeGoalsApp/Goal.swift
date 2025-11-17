@@ -6,24 +6,12 @@
 //
 
 import Foundation
+import Combine
 
-class GoalManager: ObservableObject {
-    @Published var goal = Goal(
-        title: "Test",
-        description: "Desc",
-        deadline: Date(),
-        subgoals: [Subgoal(title: "A"), Subgoal(title: "B")],
-        isCompleted: false,
-        reflections: [],
-        character: Character(
-            profileImage: "Subject 3",
-            image: "subject nobody",
-            waterLevel: 30,
-            foodLevel: 30
-        ),
-        coins: 10
-    )
-    init(goal: Goal){
+class GoalViewModel: ObservableObject {
+    @Published var goal: Goal
+
+    init(goal: Goal) {
         self.goal = goal
     }
 }

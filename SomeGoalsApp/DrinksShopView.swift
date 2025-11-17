@@ -9,15 +9,8 @@ import SwiftUI
 
 struct DrinksShopView: View {
     @EnvironmentObject var userData: UserData
-    @Binding var goal: Goal
-    
-//    let items = [
-//        ("", 100),
-//        ("Avatar Jacket", 200),
-//        ("Background Theme", 300),
-//        ("Special Badge", 500)
-//    ]
-//    
+    @StateObject var ViewModel: GoalViewModel
+      
     let items = [
         Consumable(name: "Water", dftype: "Drink", image: "subject nobody", cost: 10, fillAmount: 30),
         Consumable(name: "Coffee", dftype: "Drink", image: "subject nobody", cost: 20, fillAmount: 50),
@@ -33,7 +26,7 @@ struct DrinksShopView: View {
                         .bold()
                         .padding(.top)
                     
-                    Text("Coins: \(goal.coins)")
+                    Text("Coins: \(ViewModel.goal.coins)")
                         .font(.title2)
                         .foregroundStyle(.yellow)
                     
@@ -48,12 +41,10 @@ struct DrinksShopView: View {
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Button("Buy") {
-                                    if goal.coins >= item.cost {
-                                        goal.coins = goal.coins - item.cost
-                                        print(goal.coins)
+                                    if ViewModel.goal.coins >= item.cost {
+                                        ViewModel.goal.coins -= item.cost
                                     } else {
-                                        goal.coins = 100
-                                        print(goal.coins)
+                                        
                                     }
                                 }
                                 .buttonStyle(.borderedProminent)

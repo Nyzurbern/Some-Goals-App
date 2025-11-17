@@ -10,6 +10,7 @@ struct FailOrSuccessView: View {
     @EnvironmentObject var userData: UserData
     @State private var FinalReflectionDone = false
     @State private var reflection = ""
+    @EnvironmentObject var ViewModel: GoalViewModel
     var body: some View {
         VStack {
             Text("How does it feel to have achieved your goal? What were some limitations you faced and how did you overcome it?")

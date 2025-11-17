@@ -11,14 +11,14 @@ struct BigGoalCharacterView: View {
     @EnvironmentObject var userData: UserData
     @State private var foodRectWidth: CGFloat = 30
     @State private var waterRectWidth: CGFloat = 30
-    @Binding var goal: Goal
+    @ObservedObject var ViewModel: GoalViewModel
     var body: some View {
         ScrollView{
             VStack{
-                Text(goal.deadline, format: .dateTime.day().month().year())
+                Text(ViewModel.goal.deadline, format: .dateTime.day().month().year())
                     .bold()
                     .font(.title)
-                Image(goal.character.image)
+                Image(ViewModel.goal.character.image)
                 HStack {
                     ZStack {
                         Rectangle()
@@ -97,7 +97,7 @@ struct BigGoalCharacterView: View {
                     NavigationStack {
                         VStack {
                             NavigationLink {
-                                DrinksShopView( goal: $goal)
+                                DrinksShopView(ViewModel: GoalViewModel(goal: ViewModel.goal))
                             } label: {
                                 if #available(iOS 26.0, *) {
                                     Text("Drink")
@@ -126,7 +126,7 @@ struct BigGoalCharacterView: View {
                 NavigationStack {
                     VStack {
                         NavigationLink {
-                            AddSubGoalPopupView(goal: $goal)
+                            AddSubGoalPopupView(goal: $ViewModel.goal)
                         } label: {
                             Text("Create a subgoal!")
                                 .padding()
@@ -144,16 +144,16 @@ struct BigGoalCharacterView: View {
                     Spacer()
                 }
 
-                ForEach($goal.subgoals, id: \.self) { $subgoal in
+                ForEach($ViewModel.goal.subgoals, id: \.self) { $subgoal in
                     HStack {
                         Button {
                             // toggle completion
                             $subgoal.isCompleted.wrappedValue.toggle()
                             if subgoal.isCompleted {
-                                goal.coins +=
+                                ViewModel.goal.coins +=
                                     subgoal.coinReward
                             } else {
-                                goal.coins -= subgoal.coinReward
+                                ViewModel.goal.coins -= subgoal.coinReward
                             }
                         } label: {
                             Image(
@@ -172,7 +172,7 @@ struct BigGoalCharacterView: View {
 
                         Button {
                             // remove subgoal
-                            goal.subgoals.removeAll { $0.id == subgoal.id }
+                            ViewModel.goal.subgoals.removeAll { $0.id == subgoal.id }
                         } label: {
                             Image(systemName: "trash")
                                 .foregroundColor(.red)
@@ -220,25 +220,25 @@ struct BigGoalCharacterView: View {
     //            }
     //        }
 }
-
-#Preview {
-    BigGoalCharacterView(
-        goal: .constant(
-            Goal(
-                title: "Test",
-                description: "Desc",
-                deadline: Date(),
-                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")],
-                isCompleted: false,
-                reflections: [],
-                character: Character(
-                    profileImage: "Subject 3",
-                    image: "subject nobody",
-                    waterLevel: 30,
-                    foodLevel: 30
-                ),
-                coins: 10
-            )
-        )
-    )
-}
+//
+//#Preview {
+//    BigGoalCharacterView(
+//        goal: .constant(
+//            Goal(
+//                title: "Test",
+//                description: "Desc",
+//                deadline: Date(),
+//                subgoals: [Subgoal(title: "A"), Subgoal(title: "B")],
+//                isCompleted: false,
+//                reflections: [],
+//                character: Character(
+//                    profileImage: "Subject 3",
+//                    image: "subject nobody",
+//                    waterLevel: 30,
+//                    foodLevel: 30
+//                ),
+//                coins: 10
+//            )
+//        )
+//    )
+//}
