@@ -83,17 +83,17 @@ struct BigGoalCharacterView: View {
                             .frame(height: 41.5)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
-                    NavigationStack {
-                        HStack {
-                            NavigationLink {
-                                AddSubGoalPopupView()
-                            } label: {
-                                Text("Create a subgoal!")
-                                    .padding()
-                                    .background(Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(8)
-                            }
+                }
+                NavigationStack {
+                    VStack {
+                        NavigationLink {
+                            AddSubGoalPopupView()
+                        } label: {
+                            Text("Create a subgoal!")
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
                         }
                     }
                 }
