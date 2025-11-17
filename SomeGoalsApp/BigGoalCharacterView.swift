@@ -13,14 +13,14 @@ struct BigGoalCharacterView: View {
     @State private var waterRectWidth: CGFloat = 30
     @Binding var goal: Goal
     var body: some View {
-        ScrollView{
-            VStack{
+        ScrollView {
+            VStack {
                 Text(goal.deadline, format: .dateTime)
                     .bold()
                     .font(.title)
                 Image(goal.character.image)
-                HStack{
-                    ZStack{
+                HStack {
+                    ZStack {
                         Rectangle()
                             .frame(width: 300, height: 40)
                             .foregroundStyle(.background)
@@ -28,7 +28,7 @@ struct BigGoalCharacterView: View {
                                 RoundedRectangle(cornerRadius: 8).inset(by: 1.5)
                                     .stroke(Color.orange, lineWidth: 3)
                             )
-                        HStack{
+                        HStack {
                             Rectangle()
                                 .frame(width: foodRectWidth, height: 40)
                                 .frame(maxWidth: 300, alignment: .leading)
@@ -38,30 +38,46 @@ struct BigGoalCharacterView: View {
                         Text("🍞")
                     }
                     NavigationStack {
-                        VStack{
+                        VStack {
                             NavigationLink {
-                                ShopView()
+                                FoodShopView()
                             } label: {
-                                Text("sss")
+                                if #available(iOS 26.0, *) {
+                                    Text("Feed")
+                                        .padding()
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 8)
+                                        )
+                                        .glassEffect()
+                                } else {
+                                    Text("Feed")
+                                        .padding()
+                                        .background(.blue)
+                                        .foregroundStyle(.white)
+                                        .frame(height: 41.5)
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 8)
+                                        )
+                                }
                             }
                         }
                     }
-//                    Button{
-//                        print("Food is served")
-//                        if foodRectWidth < 300 {
-//                            foodRectWidth += 10
-//                        }
-//                    } label: {
-//                        Text("Feed")
-//                            .padding()
-//                            .background(.orange)
-//                            .foregroundStyle(.white)
-//                            .frame(height: 41.5)
-//                            .clipShape(RoundedRectangle(cornerRadius: 8))
-//                    }
+                    //                    Button{
+                    //                        print("Food is served")
+                    //                        if foodRectWidth < 300 {
+                    //                            foodRectWidth += 10
+                    //                        }
+                    //                    } label: {
+                    //                        Text("Feed")
+                    //                            .padding()
+                    //                            .background(.orange)
+                    //                            .foregroundStyle(.white)
+                    //                            .frame(height: 41.5)
+                    //                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    //                    }
                 }
-                HStack{
-                    ZStack{
+                HStack {
+                    ZStack {
                         Rectangle()
                             .frame(width: 300, height: 40)
                             .foregroundStyle(.background)
@@ -69,7 +85,7 @@ struct BigGoalCharacterView: View {
                                 RoundedRectangle(cornerRadius: 8).inset(by: 1.5)
                                     .stroke(Color.blue, lineWidth: 3)
                             )
-                        HStack{
+                        HStack {
                             Rectangle()
                                 .frame(width: waterRectWidth, height: 40)
                                 .frame(maxWidth: 300, alignment: .leading)
@@ -78,19 +94,33 @@ struct BigGoalCharacterView: View {
                         }
                         Text("💧")
                     }
-                    Button{
-                        print("Drinks are served")
-                        print(waterRectWidth)
-                        if waterRectWidth < 300 {
-                            waterRectWidth += 10
+                    NavigationStack {
+                        VStack {
+                            NavigationLink {
+                                DrinksShopView( goal: $goal)
+                            } label: {
+                                if #available(iOS 26.0, *) {
+                                    Text("Drink")
+                                        .padding()
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 8)
+                                        )
+                                        .glassEffect()
+                        
+                                        
+                                    
+                                } else {
+                                    Text("Drink")
+                                        .padding()
+                                        .background(.blue)
+                                        .foregroundStyle(.white)
+                                        .frame(height: 41.5)
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 8)
+                                        )
+                                }
+                            }
                         }
-                    } label: {
-                        Text("Drink")
-                            .padding()
-                            .background(.blue)
-                            .foregroundStyle(.white)
-                            .frame(height: 41.5)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }
                 NavigationStack {
@@ -113,7 +143,7 @@ struct BigGoalCharacterView: View {
                         .font(.headline)
                     Spacer()
                 }
-                
+
                 ForEach($goal.subgoals, id: \.self) { $subgoal in
                     HStack {
                         Button {
@@ -121,25 +151,25 @@ struct BigGoalCharacterView: View {
                             $subgoal.isCompleted.wrappedValue.toggle()
                             if subgoal.isCompleted {
                                 goal.coins +=
-                                subgoal.coinReward
+                                    subgoal.coinReward
                             } else {
                                 goal.coins -= subgoal.coinReward
                             }
                         } label: {
                             Image(
                                 systemName: subgoal.isCompleted
-                                ? "checkmark.circle.fill" : "circle"
+                                    ? "checkmark.circle.fill" : "circle"
                             )
                             .foregroundColor(
                                 subgoal.isCompleted
-                                ? .green : .primary
+                                    ? .green : .primary
                             )
                         }
-                        
+
                         TextField("Sub-goal", text: $subgoal.title)
-                        
+
                         Spacer()
-                        
+
                         Button {
                             // remove subgoal
                             goal.subgoals.removeAll { $0.id == subgoal.id }
@@ -201,7 +231,12 @@ struct BigGoalCharacterView: View {
                 subgoals: [Subgoal(title: "A"), Subgoal(title: "B")],
                 isCompleted: false,
                 reflections: [],
-                character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30),
+                character: Character(
+                    profileImage: "Subject 3",
+                    image: "subject nobody",
+                    waterLevel: 30,
+                    foodLevel: 30
+                ),
                 coins: 10
             )
         )
