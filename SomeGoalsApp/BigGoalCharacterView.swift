@@ -15,7 +15,7 @@ struct BigGoalCharacterView: View {
     var body: some View {
         ScrollView{
             VStack{
-                Text(goal.deadline, format: .dateTime)
+                Text(goal.deadline, format: .dateTime.day().month().year())
                     .bold()
                     .font(.title)
                 Image(goal.character.image)
@@ -40,7 +40,7 @@ struct BigGoalCharacterView: View {
                     NavigationStack {
                         VStack{
                             NavigationLink {
-                                ShopView()
+                                FoodShopView()
                             } label: {
                                 Text("Feed")
                                     .padding()
@@ -73,7 +73,7 @@ struct BigGoalCharacterView: View {
                     NavigationStack {
                         VStack{
                             NavigationLink {
-                                ShopView()
+                                
                             } label: {
                                 Text("Drink")
                                     .padding()
