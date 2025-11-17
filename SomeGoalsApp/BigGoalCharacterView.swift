@@ -42,23 +42,15 @@ struct BigGoalCharacterView: View {
                             NavigationLink {
                                 ShopView()
                             } label: {
-                                Text("sss")
+                                Text("Feed")
+                                    .padding()
+                                    .background(.orange)
+                                    .foregroundStyle(.white)
+                                    .frame(height: 41.5)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
                     }
-//                    Button{
-//                        print("Food is served")
-//                        if foodRectWidth < 300 {
-//                            foodRectWidth += 10
-//                        }
-//                    } label: {
-//                        Text("Feed")
-//                            .padding()
-//                            .background(.orange)
-//                            .foregroundStyle(.white)
-//                            .frame(height: 41.5)
-//                            .clipShape(RoundedRectangle(cornerRadius: 8))
-//                    }
                 }
                 HStack{
                     ZStack{
@@ -78,19 +70,19 @@ struct BigGoalCharacterView: View {
                         }
                         Text("💧")
                     }
-                    Button{
-                        print("Drinks are served")
-                        print(waterRectWidth)
-                        if waterRectWidth < 300 {
-                            waterRectWidth += 10
+                    NavigationStack {
+                        VStack{
+                            NavigationLink {
+                                ShopView()
+                            } label: {
+                                Text("Drink")
+                                    .padding()
+                                    .background(.blue)
+                                    .foregroundStyle(.white)
+                                    .frame(height: 41.5)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
                         }
-                    } label: {
-                        Text("Drink")
-                            .padding()
-                            .background(.blue)
-                            .foregroundStyle(.white)
-                            .frame(height: 41.5)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }
                 NavigationStack {
