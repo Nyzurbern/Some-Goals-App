@@ -15,10 +15,10 @@ struct BigGoalCharacterView: View {
     var body: some View {
         ScrollView{
             VStack{
-                Text("Due Date: ")
+                Text(goal.deadline, format: .dateTime)
                     .bold()
                     .font(.title)
-                Image("subject nobody")
+                Image(goal.character.image)
                 HStack{
                     ZStack{
                         Rectangle()
@@ -37,19 +37,28 @@ struct BigGoalCharacterView: View {
                         }
                         Text("🍞")
                     }
-                    Button{
-                        print("Food is served")
-                        if foodRectWidth < 300 {
-                            foodRectWidth += 10
+                    NavigationStack {
+                        VStack{
+                            NavigationLink {
+                                ShopView()
+                            } label: {
+                                Text("sss")
+                            }
                         }
-                    } label: {
-                        Text("Feed")
-                            .padding()
-                            .background(.orange)
-                            .foregroundStyle(.white)
-                            .frame(height: 41.5)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
+//                    Button{
+//                        print("Food is served")
+//                        if foodRectWidth < 300 {
+//                            foodRectWidth += 10
+//                        }
+//                    } label: {
+//                        Text("Feed")
+//                            .padding()
+//                            .background(.orange)
+//                            .foregroundStyle(.white)
+//                            .frame(height: 41.5)
+//                            .clipShape(RoundedRectangle(cornerRadius: 8))
+//                    }
                 }
                 HStack{
                     ZStack{
@@ -114,7 +123,7 @@ struct BigGoalCharacterView: View {
                                 goal.coins +=
                                 subgoal.coinReward
                             } else {
-                                // if unchecking, optionally deduct coins or leave as-is
+                                goal.coins -= subgoal.coinReward
                             }
                         } label: {
                             Image(
