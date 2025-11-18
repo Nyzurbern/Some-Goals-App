@@ -12,13 +12,14 @@ struct BigGoalCharacterView: View {
     @State private var foodRectWidth: CGFloat = 30
     @State private var waterRectWidth: CGFloat = 30
     @ObservedObject var ViewModel: GoalViewModel
+    @Binding var goal: Goal
     var body: some View {
-        ScrollView{
-            VStack{
-                Text(ViewModel.goal.deadline, format: .dateTime.day().month().year())
+        ScrollView {
+            VStack {
+                Text(goal.deadline, format: .dateTime.day().month().year())
                     .bold()
                     .font(.title)
-                Image(ViewModel.goal.character.image)
+                Image(goal.character.image)
                 HStack {
                     ZStack {
                         Rectangle()
@@ -40,7 +41,7 @@ struct BigGoalCharacterView: View {
                     NavigationStack {
                         VStack {
                             NavigationLink {
-                                FoodShopView()
+                                FoodShopView(goal: $goal)
                             } label: {
                                 if #available(iOS 26.0, *) {
                                     Text("Feed")
@@ -62,19 +63,9 @@ struct BigGoalCharacterView: View {
                             }
                         }
                     }
-                    //                    Button{
-                    //                        print("Food is served")
                     //                        if foodRectWidth < 300 {
                     //                            foodRectWidth += 10
-                    //                        }
-                    //                    } label: {
-                    //                        Text("Feed")
-                    //                            .padding()
-                    //                            .background(.orange)
-                    //                            .foregroundStyle(.white)
-                    //                            .frame(height: 41.5)
-                    //                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    //                    }
+                    //              here u go for decreasing food bar
                 }
                 HStack {
                     ZStack {
@@ -97,7 +88,7 @@ struct BigGoalCharacterView: View {
                     NavigationStack {
                         VStack {
                             NavigationLink {
-                                DrinksShopView(ViewModel: GoalViewModel(goal: ViewModel.goal))
+                                DrinksShopView(ViewModel: ViewModel)
                             } label: {
                                 if #available(iOS 26.0, *) {
                                     Text("Drink")
@@ -106,9 +97,7 @@ struct BigGoalCharacterView: View {
                                             RoundedRectangle(cornerRadius: 8)
                                         )
                                         .glassEffect()
-                        
-                                        
-                                    
+
                                 } else {
                                     Text("Drink")
                                         .padding()
@@ -123,37 +112,36 @@ struct BigGoalCharacterView: View {
                         }
                     }
                 }
-                NavigationStack {
-                    VStack {
-                        NavigationLink {
-                            AddSubGoalPopupView(goal: $ViewModel.goal)
-                        } label: {
-                            Text("Create a subgoal!")
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Text("Sub-goals")
+                            .font(.headline)
+                        Spacer()
+                    }
+                    NavigationStack {
+                        VStack {
+                            NavigationLink {
+                                AddSubGoalPopupView(goal: $goal)
+                            } label: {
+                                Text("Create a subgoal!")
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                            }
                         }
                     }
                 }
-            }
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    Text("Sub-goals")
-                        .font(.headline)
-                    Spacer()
-                }
 
-                ForEach($ViewModel.goal.subgoals, id: \.self) { $subgoal in
+                ForEach($goal.subgoals) { $subgoal in
                     HStack {
                         Button {
                             // toggle completion
                             $subgoal.isCompleted.wrappedValue.toggle()
                             if subgoal.isCompleted {
-                                ViewModel.goal.coins +=
-                                    subgoal.coinReward
+                                goal.coins += subgoal.coinReward
                             } else {
-                                ViewModel.goal.coins -= subgoal.coinReward
+                                goal.coins -= subgoal.coinReward
                             }
                         } label: {
                             Image(
@@ -172,7 +160,7 @@ struct BigGoalCharacterView: View {
 
                         Button {
                             // remove subgoal
-                            ViewModel.goal.subgoals.removeAll { $0.id == subgoal.id }
+                            goal.subgoals.removeAll { $0.id == subgoal.id }
                         } label: {
                             Image(systemName: "trash")
                                 .foregroundColor(.red)

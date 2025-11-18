@@ -48,16 +48,16 @@ struct HomeView: View {
                 // goal list
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach($userData.goals, id: \.self) { $goal in
+                        ForEach($userData.goals) { $goal in
                         
                             NavigationLink {
-                                BigGoalCharacterView(ViewModel: GoalViewModel(goal: goal))
+                                BigGoalCharacterView(ViewModel: GoalViewModel(goal: goal), goal: $goal)
                             } label: {
                                 Image(goal.character.profileImage)
                             }
                             NavigationLink {
                                 // pass binding to the goal so edits apply to list
-                                BigGoalCharacterView(ViewModel: GoalViewModel(goal: goal))
+                                BigGoalCharacterView(ViewModel: GoalViewModel(goal: goal), goal: $goal)
                                     .environmentObject(userData)
                             } label: {
                                 GoalCardView(goal: goal)
@@ -79,4 +79,3 @@ struct HomeView: View {
 //#Preview {
 //    HomeView(ViewModel: GoalViewModel).environmentObject(UserData(sample: true))
 //}
-
