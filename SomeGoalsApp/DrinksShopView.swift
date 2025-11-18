@@ -1,5 +1,5 @@
 //
-//  ShopView.swift
+//  DrinksShopView.swift
 //  SomeGoalsApp
 //
 //  Created by Anish Das on 15/11/25.
@@ -8,15 +8,36 @@
 import SwiftUI
 
 struct DrinksShopView: View {
-    @EnvironmentObject var userData: UserData
-    @StateObject var ViewModel: GoalViewModel
-      
+    @State private var selectedItem: Consumable?
+    @State private var showingBuyConfirm = false
+    @State private var showingNoBalanceAlert = false
+    @State private var missingCoins = 0
+    @Binding var goal: Goal
+
     let items = [
-        Consumable(name: "Water", dftype: "Drink", image: "subject nobody", cost: 10, fillAmount: 30),
-        Consumable(name: "Coffee", dftype: "Drink", image: "subject nobody", cost: 20, fillAmount: 50),
-        Consumable(name: "Clorox", dftype: "Drink", image: "subject nobody", cost: 30, fillAmount: 30)
+        Consumable(
+            name: "Water",
+            dftype: "Drink",
+            image: "subject nobody",
+            cost: 10,
+            fillAmount: 30
+        ),
+        Consumable(
+            name: "Coffee",
+            dftype: "Drink",
+            image: "subject nobody",
+            cost: 20,
+            fillAmount: 50
+        ),
+        Consumable(
+            name: "Energy Drink",
+            dftype: "Drink",
+            image: "subject nobody",
+            cost: 30,
+            fillAmount: 70
+        ),
     ]
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -25,13 +46,26 @@ struct DrinksShopView: View {
                         .font(.largeTitle)
                         .bold()
                         .padding(.top)
-                    
-                    Text("Coins: \(ViewModel.goal.coins)")
-                        .font(.title2)
-                        .foregroundStyle(.yellow)
-                    
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                        ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+
+                    if goal.coins < 0 {
+                        Text("Coins: \(goal.coins) 😬")
+                            .foregroundColor(.red)
+                    } else {
+                        Text("Coins: \(goal.coins) 🪙")
+                            .font(.title2)
+                            .foregroundStyle(.yellow)
+                    }
+
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible()),
+                            GridItem(.flexible()),
+                        ],
+                        spacing: 16
+                    ) {
+                        ForEach(Array(items.enumerated()), id: \.offset) {
+                            _,
+                            item in
                             VStack(spacing: 8) {
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(Color.blue.opacity(0.12))
@@ -41,25 +75,47 @@ struct DrinksShopView: View {
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Button("Buy") {
-                                    if ViewModel.goal.coins >= item.cost {
-                                        ViewModel.goal.coins -= item.cost
-                                    } else {
-                                        
-                                    }
+                                    selectedItem = item
+                                    showingBuyConfirm = true
                                 }
                                 .buttonStyle(.borderedProminent)
                             }
                             .padding()
-                            .background(RoundedRectangle(cornerRadius: 12).fill(.ultraThinMaterial))
+                            .background(
+                                RoundedRectangle(cornerRadius: 12).fill(
+                                    .ultraThinMaterial
+                                )
+                            )
                         }
                     }
                     .padding()
                 }
             }
         }
+        .alert(
+            "Buy \(selectedItem?.name ?? "item") for \(selectedItem?.cost ?? 0) coins?",
+            isPresented: $showingBuyConfirm
+        ) {
+            Button("Sure!") {
+                guard let item = selectedItem else { return }
+                if goal.coins >= item.cost {
+                    goal.coins -= item.cost
+                } else {
+                    missingCoins = item.cost - goal.coins
+                    showingNoBalanceAlert = true
+                }
+            }
+            Button("Nah", role: .cancel) {
+                selectedItem = nil
+            }
+        }
+        .alert(
+            "You are missing \(missingCoins) coins",
+            isPresented: $showingNoBalanceAlert
+        ) {
+            Button("Oh no :(", role: .cancel) {
+                selectedItem = nil
+            }
+        }
     }
 }
-
-//#Preview {
-//    DrinksShopView().environmentObject(UserData(sample: true))
-//}

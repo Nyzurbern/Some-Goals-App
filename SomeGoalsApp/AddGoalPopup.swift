@@ -77,7 +77,17 @@ struct AddGoalPopupView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        let g = Goal(title: title, description: description, deadline: GoalDeadline, subgoals: [], reflections: [], character: Character(profileImage: profileImage, image: image, waterLevel: 30, foodLevel: 30), coins: 10)
+                        let g = Goal(
+                            title: title,
+                            description: description,
+                            deadline: GoalDeadline,
+                            subgoals: [],
+                            reflections: [],
+                            character: Character(profileImage: profileImage, image: image, waterLevel: 30, foodLevel: 30),
+                            coins: 10,
+                            foodprogressbar: CGFloat(30),
+                            drinksprogressbar: CGFloat(30)
+                        )
                         userData.goals.append(g)
                         dismiss()
                     }
@@ -89,8 +99,7 @@ struct AddGoalPopupView: View {
     
 }
 
-    #Preview {
-        AddGoalPopupView()
-            .environmentObject(UserData(sample: true))
-    }
-
+#Preview {
+    AddGoalPopupView()
+        .environmentObject(UserData(sample: true))
+}

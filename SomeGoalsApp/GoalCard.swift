@@ -41,11 +41,11 @@ struct GoalCardView: View {
         .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 4)
     }
 }
-
-#Preview(traits: .sizeThatFitsLayout) {
-    GoalCardView(goal: Goal(title: "Example", description: "Quick test", deadline: Date(), subgoals: [
-        Subgoal(title: "A", isCompleted: true),
-        Subgoal(title: "B")
-    ], character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30), coins: 10))
-        .padding()
-}
+//
+//#Preview(traits: .sizeThatFitsLayout) {
+//    GoalCardView(goal: Goal(title: "Example", description: "Quick test", deadline: Date(), subgoals: [
+//        Subgoal(title: "A", isCompleted: true),
+//        Subgoal(title: "B")
+//    ], character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30), coins: 10))
+//        .padding()
+//}
