@@ -10,7 +10,13 @@ import Combine
 import CoreGraphics
 
 final class UserData: ObservableObject {
-    @Published var goals: [Goal] = []
+    @Published var goals: [Goal] = [] {
+        didSet {
+            saveGoals()
+        }
+    }
+    
+    private let saveKey = "SavedGoals"
     
     init(sample: Bool = false) {
         if sample {
@@ -27,10 +33,27 @@ final class UserData: ObservableObject {
                     reflections: ["Start early next time"],
                     character: Character(profileImage: "Subject 3", image: "subject nobody", waterLevel: 30, foodLevel: 30),
                     coins: 10,
-                    foodprogressbar: CGFloat(30),
-                    drinksprogressbar: CGFloat(30)
+                    foodprogressbar: 30,  // CHANGED: CGFloat(30) → 30
+                    drinksprogressbar: 30 // CHANGED: CGFloat(30) → 30
                 )
             ]
+        } else {
+            loadGoals()
+        }
+    }
+    
+    private func saveGoals() {
+        if let encoded = try? JSONEncoder().encode(goals) {
+            UserDefaults.standard.set(encoded, forKey: saveKey)
+            print("Saved \(goals.count) goals") // Optional: for debugging
+        }
+    }
+    
+    private func loadGoals() {
+        if let data = UserDefaults.standard.data(forKey: saveKey),
+           let decoded = try? JSONDecoder().decode([Goal].self, from: data) {
+            goals = decoded
+            print("Loaded \(goals.count) goals") // Optional: for debugging
         }
     }
 }

@@ -38,8 +38,8 @@ struct Goal: Identifiable, Hashable, Codable {
         let done = subgoals.filter { $0.isCompleted }.count
         return Double(done) / Double(subgoals.count)
     }
-    var foodprogressbar: CGFloat = 250
-    var drinksprogressbar: CGFloat = 250
+    var foodprogressbar: Double = 30  
+    var drinksprogressbar: Double = 30
 }
 
 struct Character: Identifiable, Hashable, Codable {

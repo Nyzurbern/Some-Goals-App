@@ -85,8 +85,8 @@ struct AddGoalPopupView: View {
                             reflections: [],
                             character: Character(profileImage: profileImage, image: image, waterLevel: 30, foodLevel: 30),
                             coins: 10,
-                            foodprogressbar: CGFloat(30),
-                            drinksprogressbar: CGFloat(30)
+                            foodprogressbar: 30,
+                            drinksprogressbar: 30 
                         )
                         userData.goals.append(g)
                         dismiss()
@@ -96,7 +96,6 @@ struct AddGoalPopupView: View {
             }
         }
     }
-    
 }
 
 #Preview {
