@@ -1,5 +1,5 @@
 //
-//  ShopView.swift
+//  FoodShopView.swift
 //  SomeGoalsApp
 //
 //  Created by Anish Das on 15/11/25.
@@ -13,24 +13,25 @@ struct FoodShopView: View {
     @State private var showingNoBalanceAlert = false
     @State private var missingCoins = 0
     @Binding var goal: Goal
+
     let items = [
         Consumable(
             name: "Chips",
-            dftype: "Drink",
+            dftype: "Food",
             image: "subject nobody",
             cost: 10,
             fillAmount: 30
         ),
         Consumable(
             name: "Broccoli",
-            dftype: "Drink",
+            dftype: "Food",
             image: "subject nobody",
             cost: 20,
             fillAmount: 50
         ),
         Consumable(
             name: "Cake",
-            dftype: "Drink",
+            dftype: "Food",
             image: "subject nobody",
             cost: 30,
             fillAmount: 30
@@ -45,6 +46,7 @@ struct FoodShopView: View {
                         .font(.largeTitle)
                         .bold()
                         .padding(.top)
+
                     if goal.coins < 0 {
                         Text("Coins: \(goal.coins) 😬")
                             .foregroundColor(.red)
@@ -56,7 +58,8 @@ struct FoodShopView: View {
 
                     LazyVGrid(
                         columns: [
-                            GridItem(.flexible()), GridItem(.flexible()),
+                            GridItem(.flexible()),
+                            GridItem(.flexible()),
                         ],
                         spacing: 16
                     ) {
@@ -90,13 +93,11 @@ struct FoodShopView: View {
             }
         }
         .alert(
-            "Buy for \(selectedItem?.cost ?? 0)",
+            "Buy \(selectedItem?.name ?? "item") for \(selectedItem?.cost ?? 0) coins?",
             isPresented: $showingBuyConfirm
         ) {
             Button("Sure!") {
-                guard let item = selectedItem else {
-                    return
-                }
+                guard let item = selectedItem else { return }
                 if goal.coins >= item.cost {
                     goal.coins -= item.cost
                 } else {
@@ -118,7 +119,3 @@ struct FoodShopView: View {
         }
     }
 }
-
-//#Preview {
-//    DrinksShopView().environmentObject(UserData(sample: true))
-//}
