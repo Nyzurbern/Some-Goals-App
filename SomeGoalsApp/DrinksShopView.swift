@@ -100,6 +100,7 @@ struct DrinksShopView: View {
                 guard let item = selectedItem else { return }
                 if goal.coins >= item.cost {
                     goal.coins -= item.cost
+                    goal.drinksprogressbar += CGFloat(item.fillAmount)
                 } else {
                     missingCoins = item.cost - goal.coins
                     showingNoBalanceAlert = true

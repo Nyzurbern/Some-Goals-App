@@ -9,8 +9,6 @@ import SwiftUI
 
 struct BigGoalCharacterView: View {
     @EnvironmentObject var userData: UserData
-    @State private var foodRectWidth: CGFloat = 30
-    @State private var waterRectWidth: CGFloat = 30
     @ObservedObject var ViewModel: GoalViewModel
     @Binding var goal: Goal
     
@@ -36,7 +34,7 @@ struct BigGoalCharacterView: View {
                                 )
                             HStack {
                                 Rectangle() //this rectangle is the progress bar inside
-                                    .frame(width: foodRectWidth, height: 40)
+                                    .frame(width: goal.foodprogressbar, height: 40)
                                     .frame(maxWidth: 250, alignment: .leading)
                                     .foregroundStyle(.orange)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -75,7 +73,7 @@ struct BigGoalCharacterView: View {
                                 )
                             HStack {
                                 Rectangle()
-                                    .frame(width: waterRectWidth, height: 40)
+                                    .frame(width: goal.drinksprogressbar, height: 40)
                                     .frame(maxWidth: 250, alignment: .leading)
                                     .foregroundStyle(.blue)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
