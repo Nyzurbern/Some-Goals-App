@@ -15,28 +15,41 @@ struct BigGoalCharacterView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Character Section
+       
                 VStack {
                     Text(goal.deadline, format: .dateTime.day().month().year())
                         .bold()
                         .font(.title)
-                    Image(goal.character.image)
                     
-                    // Food Bar
+                    if goal.foodprogressbar <= 10 || goal.drinksprogressbar <= 10 {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(.red)
+                            Text("Your character is hungry/thirsty!")
+                                .foregroundColor(.red)
+                                .font(.caption)
+                                .bold()
+                        }
+                        .padding(8)
+                        .background(Color.red.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+                    
+                    Image(goal.character.image)
                     HStack {
                         ZStack {
-                            Rectangle() //this rectangle is the progress bar outside
+                            Rectangle()
                                 .frame(width: 250, height: 40)
                                 .foregroundStyle(.background)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8).inset(by: 1.5)
-                                        .stroke(Color.orange, lineWidth: 3)
+                                        .stroke(goal.foodprogressbar <= 10 ? Color.red : Color.orange, lineWidth: 3)
                                 )
                             HStack {
-                                Rectangle() //this rectangle is the progress bar inside
+                                Rectangle()
                                     .frame(width: goal.foodprogressbar, height: 40)
                                     .frame(maxWidth: 250, alignment: .leading)
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(goal.foodprogressbar <= 10 ? Color.red : Color.orange)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             Text("🍞")
@@ -61,7 +74,6 @@ struct BigGoalCharacterView: View {
                         }
                     }
                     
-                    // Water Bar
                     HStack {
                         ZStack {
                             Rectangle()
@@ -69,13 +81,13 @@ struct BigGoalCharacterView: View {
                                 .foregroundStyle(.background)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8).inset(by: 1.5)
-                                        .stroke(Color.blue, lineWidth: 3)
+                                        .stroke(goal.drinksprogressbar <= 10 ? Color.red : Color.blue, lineWidth: 3)
                                 )
                             HStack {
                                 Rectangle()
                                     .frame(width: goal.drinksprogressbar, height: 40)
                                     .frame(maxWidth: 250, alignment: .leading)
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(goal.drinksprogressbar <= 10 ? Color.red : Color.blue)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             Text("💧")
@@ -98,6 +110,14 @@ struct BigGoalCharacterView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
+                    }
+                    HStack {
+                        Text("Food: \(Int(goal.foodprogressbar))%/250")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("Water: \(Int(goal.drinksprogressbar))%/250")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
                 .padding()
@@ -165,11 +185,9 @@ struct BigGoalCharacterView: View {
                             }
                         }
                         .listStyle(.plain)
-                        .scrollContentBackground(.hidden) //
+                        .scrollContentBackground(.hidden)
                         .background(Color.clear)
-                        .frame(height: CGFloat(goal.subgoals.count) * 70 + 20) //had to do this for like 200 times bruh
-                        //or else the code straight up just doesnt work becuz apparently lists cant be inside scrollviews
-                        //stupid swiftui
+                        .frame(height: CGFloat(goal.subgoals.count) * 70 + 20)
                     }
                 }
             }
