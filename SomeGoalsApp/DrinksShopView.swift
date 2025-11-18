@@ -119,3 +119,4 @@ struct DrinksShopView: View {
         }
     }
 }
+//omigawd i hate working at selected items... i took like 2 hours to come up with this stupid idea about selecteditem being a variable
