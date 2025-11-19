@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AddReflectionView: View {
     @Binding var goal: Goal
-    @Environment(\.dismiss) private var dismiss // Optional: to dismiss the view after archiving
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var userData: UserData
     
     var body: some View {
         Form {
@@ -36,29 +37,34 @@ struct AddReflectionView: View {
             
             // Archive button section
             Section {
-                            Button(action: archiveGoal) {
-                                HStack {
-                                    Spacer()
-                                    Text("Archive Goal")
-                                        .fontWeight(.semibold)
-                                    Spacer()
-                                }
-                            }
-                            .foregroundColor(.red)
-                        }
+                Button(action: archiveGoal) {
+                    HStack {
+                        Spacer()
+                        Text("Archive Goal")
+                            .fontWeight(.semibold)
+                        Spacer()
                     }
-                    .navigationTitle("Add Reflection")
                 }
-                
-                private func archiveGoal() {
-                    print("Archive button tapped for goal: \(goal.title)")
-                    
-                    goal.isCompleted = true
-                    
-                    if let index = userData.goals.firstIndex(where: { $0.id == goal.id }) {
-                        userData.goals[index] = goal
-                    }
-                    
-                    shouldDismissToRoot = true
-                    dismiss()
-                }
+                .foregroundColor(.red)
+            }
+        }
+        .navigationTitle("Add Reflection")
+        .navigationBarBackButtonHidden(true) // Prevent manual going back
+    }
+    
+    private func archiveGoal() {
+        print("Archive button tapped for goal: \(goal.title)")
+        
+        // Update the goal
+        goal.isCompleted = true
+        
+        // Update in userData
+        if let index = userData.goals.firstIndex(where: { $0.id == goal.id }) {
+            userData.goals[index] = goal
+        }
+        
+        // Dismiss both AddReflectionView AND BigGoalCharacterView
+        // This will pop back to HomeView
+        dismiss()
+    }
+}
