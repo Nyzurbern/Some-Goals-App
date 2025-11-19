@@ -11,29 +11,31 @@ struct BigGoalCharacterView: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var ViewModel: GoalViewModel
     @Binding var goal: Goal
-    @State var Reflection: Reflection
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 VStack {
                     HStack {
-                        Text("Hi! My name is \(goal.characterName)")
+                        if goal.characterName != "" {
+                            Text("Hi! My name is \(goal.characterName)")
+                        }
                         Spacer()
-                        NavigationStack {
+                        //here is start
+                        //if goal.progress >= 99 {
                             NavigationLink {
-                                AddReflectionView(Reflection: $Reflection)
-                            }
-                            label: {
+                                AddReflectionView(goal: $goal)
+                            } label: {
                                 if #available(iOS 26.0, *) {
-                                    Text("Drink")
+                                    
+                                    Text("Reflect")
                                         .padding()
                                         .clipShape(
                                             RoundedRectangle(cornerRadius: 8)
                                         )
                                         .glassEffect()
                                 } else {
-                                    Text("Drink")
+                                    Text("Reflect")
                                         .padding()
                                         .background(.blue)
                                         .foregroundStyle(.white)
@@ -42,11 +44,10 @@ struct BigGoalCharacterView: View {
                                             RoundedRectangle(cornerRadius: 8)
                                         )
                                 }
-                                
-
                             }
                         }
-                    }
+                        //here is end
+                    //}
                     if goal.foodprogressbar <= 10
                         || goal.drinksprogressbar <= 10
                     {

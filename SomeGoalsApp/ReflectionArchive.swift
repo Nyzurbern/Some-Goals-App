@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ReflectionArchive: View {
     @EnvironmentObject var userData: UserData
-    @State private var selectedIndex: Int = 0
-    @State private var newReflection: String = ""
     
     var body: some View {
         NavigationStack {
@@ -21,16 +19,22 @@ struct ReflectionArchive: View {
                     .padding(.horizontal)
                     .padding(.top)
                 
-                if $userData.goals.isEmpty {
+                if userData.goals.isEmpty {
                     Text("No goals yet. Add a goal from Home to start reflecting.")
                         .foregroundColor(.secondary)
                         .padding()
                     Spacer()
                 } else {
-                    if 0 == 0 {
+                    List(userData.goals) { goal in
+                        VStack(alignment: .leading) {
+                            Text(goal.title)
+                                .font(.headline)
+                            Text(goal.description)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
                     }
-                        
-                    }
+                }
             }
         }
     }

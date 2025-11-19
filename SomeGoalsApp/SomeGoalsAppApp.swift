@@ -12,7 +12,7 @@ struct SomeGoalsAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView( Reflection: $Reflection)
+            ContentView()
         }
     }
 }

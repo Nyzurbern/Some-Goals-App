@@ -41,6 +41,9 @@ struct Goal: Identifiable, Hashable, Codable {
     var foodprogressbar: Double = 30
     var drinksprogressbar: Double = 30
     var characterName: String = ""
+    var challenges: String = ""
+    var actionsorhabits: String = ""
+    var resourcesorsupport: String = ""
 }
 
 struct Character: Identifiable, Hashable, Codable {
@@ -58,11 +61,4 @@ struct Consumable: Identifiable, Hashable, Codable {
     var image: String
     var cost: Int
     var fillAmount: Int
-}
-
-struct Reflection: Identifiable, Hashable, Codable {
-    var id = UUID()
-    var challenges: String = ""
-    var actionsorhabits: String = ""
-    var resourcesorsupport: String = ""
 }
