@@ -49,13 +49,12 @@ struct AddReflectionView: View {
             }
         }
         .navigationTitle("Add Reflection")
-        .navigationBarBackButtonHidden(true) // Prevent manual going back
+        .navigationBarBackButtonHidden(true) 
     }
     
     private func archiveGoal() {
         print("Archive button tapped for goal: \(goal.title)")
         
-        // Update the goal
         goal.isCompleted = true
         
         // Update in userData
@@ -63,8 +62,6 @@ struct AddReflectionView: View {
             userData.goals[index] = goal
         }
         
-        // Dismiss both AddReflectionView AND BigGoalCharacterView
-        // This will pop back to HomeView
         dismiss()
     }
 }
