@@ -18,6 +18,7 @@ struct AddGoalPopupView: View {
     @State private var image: String = "subject nobody"
     @State private var profileImage: String = "Subject 3"
     @State private var CharacterPicked: Int = 0
+    @State private var CharacterName: String = ""
     
     var body: some View {
         NavigationStack {
@@ -28,6 +29,8 @@ struct AddGoalPopupView: View {
                     TextField("Short description", text: $description)
                         .textInputAutocapitalization(.sentences)
                     DatePicker("Deadline", selection: $GoalDeadline, displayedComponents: .date)
+                    TextField("Character name", text: $CharacterName)
+                        .textInputAutocapitalization(.sentences)
                 }
                 
                 Section(header: Text("Reward")) {
@@ -86,7 +89,10 @@ struct AddGoalPopupView: View {
                             character: Character(profileImage: profileImage, image: image, waterLevel: 30, foodLevel: 30),
                             coins: 10,
                             foodprogressbar: 30,
-                            drinksprogressbar: 30 
+                            drinksprogressbar: 30,
+                            characterName: CharacterName
+                        //characterName: the one in the struct
+                        //CharacterName: the variable only declared here
                         )
                         userData.goals.append(g)
                         dismiss()

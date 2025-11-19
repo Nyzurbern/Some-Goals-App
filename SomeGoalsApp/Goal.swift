@@ -40,6 +40,7 @@ struct Goal: Identifiable, Hashable, Codable {
     }
     var foodprogressbar: Double = 30  
     var drinksprogressbar: Double = 30
+    var characterName: String = ""
 }
 
 struct Character: Identifiable, Hashable, Codable {

@@ -15,7 +15,6 @@ struct BigGoalCharacterView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-       
                 VStack {
                     Text(goal.deadline, format: .dateTime.day().month().year())
                         .bold()
