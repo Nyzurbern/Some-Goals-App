@@ -52,7 +52,7 @@ final class UserData: ObservableObject {
     }
     
     private func startDailyDecreaseTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 360, repeats: true) { _ in
             self.checkDailyDecrease()
         }
     }

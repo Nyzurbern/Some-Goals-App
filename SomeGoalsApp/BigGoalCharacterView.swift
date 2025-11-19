@@ -24,8 +24,7 @@ struct BigGoalCharacterView: View {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundColor(.red)
-                            Text("Your character is hungry/thirsty!")
-                                .foregroundColor(.red)
+                            Text("Your character is hungry/thirsty")
                                 .font(.caption)
                                 .bold()
                         }
