@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct SomeGoalsAppApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView( Reflection: $Reflection)
         }
     }
 }

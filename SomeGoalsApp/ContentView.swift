@@ -9,10 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var userData = UserData(sample: false) // set true for sample data
+    @Binding var Reflection: Reflection
     
     var body: some View {
         TabView {
-            HomeView()
+            HomeView( Reflection: $Reflection)
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
                 }
@@ -26,8 +27,8 @@ struct ContentView: View {
         }
     }
 }
-
-#Preview {
-    ContentView()
-}
-
+//
+//#Preview {
+//    ContentView()
+//}
+//

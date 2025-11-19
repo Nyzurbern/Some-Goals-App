@@ -13,6 +13,7 @@ struct DueDatePopupView: View {
     @State private var FailedGoal = false
     @State private var ExtendDueDate = false
     @State private var ICompletedMyGoal = false
+    @Binding var Reflection: Reflection
     
     var body: some View {
         NavigationStack {
@@ -48,14 +49,14 @@ struct DueDatePopupView: View {
             }
             .navigationTitle("")
             .sheet(isPresented: $FailedGoal) {
-                FailOrSuccessView()}
+                FailOrSuccessView( Reflection: $Reflection)}
             .sheet(isPresented: $ExtendDueDate) {
                 ExtendDueDateView()}
-            .sheet(isPresented: $ICompletedMyGoal) {FailOrSuccessView()}
+            .sheet(isPresented: $ICompletedMyGoal) {FailOrSuccessView( Reflection: $Reflection)}
         }
     }
 }
-
-#Preview {
-    DueDatePopupView()
-}
+//
+//#Preview {
+//    DueDatePopupView()
+//}

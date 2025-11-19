@@ -20,6 +20,11 @@ struct AddGoalPopupView: View {
     @State private var CharacterPicked: Int = 0
     @State private var CharacterName: String = ""
     
+    let characterOptions = [
+        ("Subject 3", "subject nobody"),
+        ("Subject 4", "subject nobody") // Add your actual image names here
+    ]
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -40,37 +45,23 @@ struct AddGoalPopupView: View {
                 Section(header: Text("Character")) {
                     ScrollView(.horizontal) {
                         HStack {
-                            Button{
-                                image = "subject nobody"
-                                profileImage = "Subject 3"
-                                CharacterPicked=1
-                            }label: {
-                                Image("Subject 3")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(Circle())
-                                    .overlay {
-                                        if CharacterPicked == 1 {
-                                            Circle().stroke(.blue, lineWidth: 4)
+                            ForEach(Array(characterOptions.enumerated()), id: \.offset) { index, character in
+                                Button {
+                                    profileImage = character.0
+                                    image = character.1
+                                    CharacterPicked = index + 1
+                                } label: {
+                                    Image(character.0)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 80, height: 80)
+                                        .clipShape(Circle())
+                                        .overlay {
+                                            if CharacterPicked == index + 1 {
+                                                Circle().stroke(.blue, lineWidth: 4)
+                                            }
                                         }
-                                    }
-                            }
-                            Button{
-                                image = "subject nobody"
-                                profileImage = "Subject 3"
-                                CharacterPicked=2
-                            }label: {
-                                Image("Subject 3")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(Circle())
-                                    .overlay {
-                                        if CharacterPicked == 2 {
-                                            Circle().stroke(.blue, lineWidth: 4)
-                                        }
-                                    }
+                                }
                             }
                         }
                     }
@@ -86,13 +77,16 @@ struct AddGoalPopupView: View {
                             deadline: GoalDeadline,
                             subgoals: [],
                             reflections: [],
-                            character: Character(profileImage: profileImage, image: image, waterLevel: 30, foodLevel: 30),
-                            coins: 10,
+                            character: Character(
+                                profileImage: profileImage,
+                                image: image,
+                                waterLevel: 30,
+                                foodLevel: 30
+                            ),
+                            coins: reward, // Fixed: use reward instead of hardcoded 10
                             foodprogressbar: 30,
                             drinksprogressbar: 30,
                             characterName: CharacterName
-                        //characterName: the one in the struct
-                        //CharacterName: the variable only declared here
                         )
                         userData.goals.append(g)
                         dismiss()
@@ -103,7 +97,6 @@ struct AddGoalPopupView: View {
         }
     }
 }
-
 #Preview {
     AddGoalPopupView()
         .environmentObject(UserData(sample: true))

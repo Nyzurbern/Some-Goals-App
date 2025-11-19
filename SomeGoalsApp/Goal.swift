@@ -5,8 +5,8 @@
 //  Created by Anish Das on 15/11/25.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 class GoalViewModel: ObservableObject {
     @Published var goal: Goal
@@ -38,7 +38,7 @@ struct Goal: Identifiable, Hashable, Codable {
         let done = subgoals.filter { $0.isCompleted }.count
         return Double(done) / Double(subgoals.count)
     }
-    var foodprogressbar: Double = 30  
+    var foodprogressbar: Double = 30
     var drinksprogressbar: Double = 30
     var characterName: String = ""
 }
@@ -58,4 +58,11 @@ struct Consumable: Identifiable, Hashable, Codable {
     var image: String
     var cost: Int
     var fillAmount: Int
+}
+
+struct Reflection: Identifiable, Hashable, Codable {
+    var id = UUID()
+    var challenges: String = ""
+    var actionsorhabits: String = ""
+    var resourcesorsupport: String = ""
 }

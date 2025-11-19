@@ -11,6 +11,7 @@ struct BigGoalCharacterView: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var ViewModel: GoalViewModel
     @Binding var goal: Goal
+    @State var Reflection: Reflection
 
     var body: some View {
         ScrollView {
@@ -21,7 +22,7 @@ struct BigGoalCharacterView: View {
                         Spacer()
                         NavigationStack {
                             NavigationLink {
-                                AddReflectionView()
+                                AddReflectionView(Reflection: $Reflection)
                             }
                             label: {
                                 if #available(iOS 26.0, *) {
