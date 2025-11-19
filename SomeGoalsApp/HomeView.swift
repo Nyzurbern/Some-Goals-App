@@ -7,11 +7,16 @@
 
 import SwiftUI
 
+// HomeView.swift
 struct HomeView: View {
     @EnvironmentObject var userData: UserData
     @State private var showAddGoal = false
     @State private var showAddSubGoal = false
-    
+
+    var activeGoals: [Goal] {
+        userData.goals.filter { !$0.isCompleted }
+    }
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 12) {
@@ -26,7 +31,7 @@ struct HomeView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top)
-                
+
                 // actions
                 HStack(spacing: 12) {
                     Button {
@@ -35,27 +40,33 @@ struct HomeView: View {
                         Label("Add Goal", systemImage: "plus.circle.fill")
                             .padding(.vertical, 10)
                             .padding(.horizontal, 14)
-                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.blue))
+                            .background(
+                                RoundedRectangle(cornerRadius: 10).fill(
+                                    Color.blue
+                                )
+                            )
                             .foregroundStyle(.white)
                     }
-                    
+
                     Spacer()
                 }
                 .padding(.horizontal)
-                
-                // goal list
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach($userData.goals) { $goal in
+                        ForEach(
+                            $userData.goals.filter {
+                                !$0.wrappedValue.isCompleted
+                            }
+                        ) { $goal in
                             NavigationLink {
                                 BigGoalCharacterView(
                                     ViewModel: GoalViewModel(goal: goal),
-                                    goal: $goal,
+                                    goal: $goal
                                 )
                             } label: {
                                 GoalCardView(goal: goal)
                             }
-                            .buttonStyle(PlainButtonStyle()) // Add this to fix navigation styling
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding()

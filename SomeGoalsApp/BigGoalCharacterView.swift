@@ -22,20 +22,20 @@ struct BigGoalCharacterView: View {
                         }
                         Spacer()
                         //here is start
-                        //if goal.progress >= 99 {
+                        if goal.progress == 1.0 {
                             NavigationLink {
                                 AddReflectionView(goal: $goal)
                             } label: {
                                 if #available(iOS 26.0, *) {
                                     
-                                    Text("Reflect")
+                                    Text("Reflect and archive")
                                         .padding()
                                         .clipShape(
                                             RoundedRectangle(cornerRadius: 8)
                                         )
                                         .glassEffect()
                                 } else {
-                                    Text("Reflect")
+                                    Text("Reflect and archive")
                                         .padding()
                                         .background(.blue)
                                         .foregroundStyle(.white)
@@ -47,7 +47,7 @@ struct BigGoalCharacterView: View {
                             }
                         }
                         //here is end
-                    //}
+                    }
                     if goal.foodprogressbar <= 10
                         || goal.drinksprogressbar <= 10
                     {
