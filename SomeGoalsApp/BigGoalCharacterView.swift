@@ -11,16 +11,44 @@ struct BigGoalCharacterView: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var ViewModel: GoalViewModel
     @Binding var goal: Goal
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 VStack {
-                    Text(goal.deadline, format: .dateTime.day().month().year())
-                        .bold()
-                        .font(.title)
-                    
-                    if goal.foodprogressbar <= 10 || goal.drinksprogressbar <= 10 {
+                    HStack {
+                        Text("Hi! My name is \(goal.characterName)")
+                        Spacer()
+                        NavigationStack {
+                            NavigationLink {
+                                AddReflectionView()
+                            }
+                            label: {
+                                if #available(iOS 26.0, *) {
+                                    Text("Drink")
+                                        .padding()
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 8)
+                                        )
+                                        .glassEffect()
+                                } else {
+                                    Text("Drink")
+                                        .padding()
+                                        .background(.blue)
+                                        .foregroundStyle(.white)
+                                        .frame(height: 41.5)
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 8)
+                                        )
+                                }
+                                
+
+                            }
+                        }
+                    }
+                    if goal.foodprogressbar <= 10
+                        || goal.drinksprogressbar <= 10
+                    {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundColor(.red)
@@ -32,34 +60,53 @@ struct BigGoalCharacterView: View {
                         .background(Color.red.opacity(0.1))
                         .cornerRadius(8)
                     }
-                    
+
                     Image(goal.character.image)
+                    Text(goal.deadline, format: .dateTime.day().month().year())
+                        .bold()
+                        .font(.title)
                     HStack {
                         ZStack {
                             Rectangle()
                                 .frame(width: 250, height: 40)
                                 .foregroundStyle(.background)
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 8).inset(by: 1.5)
-                                        .stroke(goal.foodprogressbar <= 10 ? Color.red : Color.orange, lineWidth: 3)
+                                    RoundedRectangle(cornerRadius: 8).inset(
+                                        by: 1.5
+                                    )
+                                    .stroke(
+                                        goal.foodprogressbar <= 10
+                                            ? Color.red : Color.orange,
+                                        lineWidth: 3
+                                    )
                                 )
                             HStack {
                                 Rectangle()
-                                    .frame(width: goal.foodprogressbar, height: 40)
+                                    .frame(
+                                        width: goal.foodprogressbar,
+                                        height: 40
+                                    )
                                     .frame(maxWidth: 250, alignment: .leading)
-                                    .foregroundStyle(goal.foodprogressbar <= 10 ? Color.red : Color.orange)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .foregroundStyle(
+                                        goal.foodprogressbar <= 10
+                                            ? Color.red : Color.orange
+                                    )
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 8)
+                                    )
                             }
                             Text("🍞")
                         }
-                        
+
                         NavigationLink {
                             FoodShopView(goal: $goal)
                         } label: {
                             if #available(iOS 26.0, *) {
                                 Text("Feed")
                                     .padding()
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 8)
+                                    )
                                     .glassEffect()
                             } else {
                                 Text("Feed")
@@ -67,37 +114,55 @@ struct BigGoalCharacterView: View {
                                     .background(.blue)
                                     .foregroundStyle(.white)
                                     .frame(height: 41.5)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 8)
+                                    )
                             }
                         }
                     }
-                    
+
                     HStack {
                         ZStack {
                             Rectangle()
                                 .frame(width: 250, height: 40)
                                 .foregroundStyle(.background)
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 8).inset(by: 1.5)
-                                        .stroke(goal.drinksprogressbar <= 10 ? Color.red : Color.blue, lineWidth: 3)
+                                    RoundedRectangle(cornerRadius: 8).inset(
+                                        by: 1.5
+                                    )
+                                    .stroke(
+                                        goal.drinksprogressbar <= 10
+                                            ? Color.red : Color.blue,
+                                        lineWidth: 3
+                                    )
                                 )
                             HStack {
                                 Rectangle()
-                                    .frame(width: goal.drinksprogressbar, height: 40)
+                                    .frame(
+                                        width: goal.drinksprogressbar,
+                                        height: 40
+                                    )
                                     .frame(maxWidth: 250, alignment: .leading)
-                                    .foregroundStyle(goal.drinksprogressbar <= 10 ? Color.red : Color.blue)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .foregroundStyle(
+                                        goal.drinksprogressbar <= 10
+                                            ? Color.red : Color.blue
+                                    )
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 8)
+                                    )
                             }
                             Text("💧")
                         }
-                        
+
                         NavigationLink {
                             DrinksShopView(goal: $goal)
                         } label: {
                             if #available(iOS 26.0, *) {
                                 Text("Drink")
                                     .padding()
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 8)
+                                    )
                                     .glassEffect()
                             } else {
                                 Text("Drink")
@@ -105,7 +170,9 @@ struct BigGoalCharacterView: View {
                                     .background(.blue)
                                     .foregroundStyle(.white)
                                     .frame(height: 41.5)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    .clipShape(
+                                        RoundedRectangle(cornerRadius: 8)
+                                    )
                             }
                         }
                     }
@@ -121,13 +188,13 @@ struct BigGoalCharacterView: View {
                 .padding()
                 .background(Color.gray.opacity(0.06))
                 .cornerRadius(12)
-            
+
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Text("Sub-goals")
                             .font(.title2.bold())
                         Spacer()
-                        
+
                         NavigationLink {
                             AddSubGoalPopupView(goal: $goal)
                         } label: {
@@ -140,7 +207,7 @@ struct BigGoalCharacterView: View {
                         }
                     }
                     .padding(.horizontal)
-                    
+
                     if goal.subgoals.isEmpty {
                         Text("No subgoals yet. Add one to get started!")
                             .foregroundColor(.secondary)
@@ -151,23 +218,31 @@ struct BigGoalCharacterView: View {
                             ForEach($goal.subgoals) { $subgoal in
                                 HStack {
                                     Button {
-                                        $subgoal.isCompleted.wrappedValue.toggle()
+                                        $subgoal.isCompleted.wrappedValue
+                                            .toggle()
                                         if subgoal.isCompleted {
                                             goal.coins += subgoal.coinReward
                                         } else {
                                             goal.coins -= subgoal.coinReward
                                         }
                                     } label: {
-                                        Image(systemName: subgoal.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(subgoal.isCompleted ? .green : .primary)
-                                            .font(.title2)
+                                        Image(
+                                            systemName: subgoal.isCompleted
+                                                ? "checkmark.circle.fill"
+                                                : "circle"
+                                        )
+                                        .foregroundColor(
+                                            subgoal.isCompleted
+                                                ? .green : .primary
+                                        )
+                                        .font(.title2)
                                     }
-                                    
+
                                     TextField("Sub-goal", text: $subgoal.title)
                                         .font(.body)
-                                    
+
                                     Spacer()
-                                    
+
                                     Text("+\(subgoal.coinReward) coins")
                                         .font(.caption)
                                         .foregroundColor(.yellow)
