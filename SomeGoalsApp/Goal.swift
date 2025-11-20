@@ -44,6 +44,7 @@ struct Goal: Identifiable, Hashable, Codable {
     var challenges: String = ""
     var actionsorhabits: String = ""
     var resourcesorsupport: String = ""
+    var intervaaall: Int = 86400
 }
 
 struct Character: Identifiable, Hashable, Codable {

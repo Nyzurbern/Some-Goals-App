@@ -53,7 +53,8 @@ final class UserData: ObservableObject {
     }
     
     private func startDailyDecreaseTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 360, repeats: true) { _ in
+        let interval = goals.first?.intervaaall ?? 86400
+        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: true) { _ in
             self.checkDailyDecrease()
         }
     }

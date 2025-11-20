@@ -49,7 +49,7 @@ struct AddReflectionView: View {
             }
         }
         .navigationTitle("Add Reflection")
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden(false)
     }
     
     private func archiveGoal() {
