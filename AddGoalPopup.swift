@@ -83,11 +83,10 @@ struct AddGoalPopupView: View {
                                 waterLevel: 30,
                                 foodLevel: 30
                             ),
-                            coins: reward, 
+                            coins: reward, // Fixed: use reward instead of hardcoded 10
                             foodprogressbar: 30,
                             drinksprogressbar: 30,
-                            characterName: CharacterName,
-                            intervaaall: 86400
+                            characterName: CharacterName
                         )
                         userData.goals.append(g)
                         dismiss()

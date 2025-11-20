@@ -49,13 +49,12 @@ struct AddReflectionView: View {
             }
         }
         .navigationTitle("Add Reflection")
-        .navigationBarBackButtonHidden(false)
+        .navigationBarBackButtonHidden(true) 
     }
     
     private func archiveGoal() {
         print("Archive button tapped for goal: \(goal.title)")
         
-        // Update the goal
         goal.isCompleted = true
         
         // Update in userData
@@ -63,7 +62,6 @@ struct AddReflectionView: View {
             userData.goals[index] = goal
         }
         
-        // Dismiss the entire navigation stack back to HomeView
         dismiss()
     }
 }

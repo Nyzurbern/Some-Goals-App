@@ -11,7 +11,6 @@ struct BigGoalCharacterView: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var ViewModel: GoalViewModel
     @Binding var goal: Goal
-    @Environment(\.dismiss) private var dismiss 
 
     var body: some View {
         ScrollView {

@@ -6,7 +6,46 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D9257BD12ECF2179006D1C4A /* DrinksShopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC52ECF2179006D1C4A /* DrinksShopView.swift */; };
+		D9257BD22ECF2179006D1C4A /* DueDatePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC62ECF2179006D1C4A /* DueDatePopupView.swift */; };
+		D9257BD32ECF2179006D1C4A /* FoodShopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC92ECF2179006D1C4A /* FoodShopView.swift */; };
+		D9257BD42ECF2179006D1C4A /* ReflectionArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BCE2ECF2179006D1C4A /* ReflectionArchive.swift */; };
+		D9257BD52ECF2179006D1C4A /* AddReflectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC02ECF2179006D1C4A /* AddReflectionView.swift */; };
+		D9257BD62ECF2179006D1C4A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC42ECF2179006D1C4A /* ContentView.swift */; };
+		D9257BD72ECF2179006D1C4A /* GoalDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BCC2ECF2179006D1C4A /* GoalDetail.swift */; };
+		D9257BD82ECF2179006D1C4A /* ExtendDueDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC72ECF2179006D1C4A /* ExtendDueDateView.swift */; };
+		D9257BD92ECF2179006D1C4A /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BCA2ECF2179006D1C4A /* Goal.swift */; };
+		D9257BDA2ECF2179006D1C4A /* SomeGoalsAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BCF2ECF2179006D1C4A /* SomeGoalsAppApp.swift */; };
+		D9257BDB2ECF2179006D1C4A /* AddSubGoalPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC12ECF2179006D1C4A /* AddSubGoalPopupView.swift */; };
+		D9257BDC2ECF2179006D1C4A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BCD2ECF2179006D1C4A /* HomeView.swift */; };
+		D9257BDD2ECF2179006D1C4A /* FailOrSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC82ECF2179006D1C4A /* FailOrSuccessView.swift */; };
+		D9257BDE2ECF2179006D1C4A /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BD02ECF2179006D1C4A /* UserData.swift */; };
+		D9257BDF2ECF2179006D1C4A /* BigGoalCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BC32ECF2179006D1C4A /* BigGoalCharacterView.swift */; };
+		D9257BE02ECF2179006D1C4A /* AddGoalPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BBF2ECF2179006D1C4A /* AddGoalPopup.swift */; };
+		D9257BE12ECF2179006D1C4A /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257BCB2ECF2179006D1C4A /* GoalCard.swift */; };
+		D9257BE22ECF2179006D1C4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9257BC22ECF2179006D1C4A /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		D9257BBF2ECF2179006D1C4A /* AddGoalPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGoalPopup.swift; sourceTree = "<group>"; };
+		D9257BC02ECF2179006D1C4A /* AddReflectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReflectionView.swift; sourceTree = "<group>"; };
+		D9257BC12ECF2179006D1C4A /* AddSubGoalPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubGoalPopupView.swift; sourceTree = "<group>"; };
+		D9257BC22ECF2179006D1C4A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D9257BC32ECF2179006D1C4A /* BigGoalCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigGoalCharacterView.swift; sourceTree = "<group>"; };
+		D9257BC42ECF2179006D1C4A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D9257BC52ECF2179006D1C4A /* DrinksShopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinksShopView.swift; sourceTree = "<group>"; };
+		D9257BC62ECF2179006D1C4A /* DueDatePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueDatePopupView.swift; sourceTree = "<group>"; };
+		D9257BC72ECF2179006D1C4A /* ExtendDueDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendDueDateView.swift; sourceTree = "<group>"; };
+		D9257BC82ECF2179006D1C4A /* FailOrSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailOrSuccessView.swift; sourceTree = "<group>"; };
+		D9257BC92ECF2179006D1C4A /* FoodShopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodShopView.swift; sourceTree = "<group>"; };
+		D9257BCA2ECF2179006D1C4A /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
+		D9257BCB2ECF2179006D1C4A /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
+		D9257BCC2ECF2179006D1C4A /* GoalDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetail.swift; sourceTree = "<group>"; };
+		D9257BCD2ECF2179006D1C4A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		D9257BCE2ECF2179006D1C4A /* ReflectionArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionArchive.swift; sourceTree = "<group>"; };
+		D9257BCF2ECF2179006D1C4A /* SomeGoalsAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeGoalsAppApp.swift; sourceTree = "<group>"; };
+		D9257BD02ECF2179006D1C4A /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		D9E07C672EC715BE00516559 /* SomeGoalsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SomeGoalsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -34,6 +73,24 @@
 			children = (
 				D9E07C692EC715BE00516559 /* SomeGoalsApp */,
 				D9E07C682EC715BE00516559 /* Products */,
+				D9257BBF2ECF2179006D1C4A /* AddGoalPopup.swift */,
+				D9257BC02ECF2179006D1C4A /* AddReflectionView.swift */,
+				D9257BC12ECF2179006D1C4A /* AddSubGoalPopupView.swift */,
+				D9257BC22ECF2179006D1C4A /* Assets.xcassets */,
+				D9257BC32ECF2179006D1C4A /* BigGoalCharacterView.swift */,
+				D9257BC42ECF2179006D1C4A /* ContentView.swift */,
+				D9257BC52ECF2179006D1C4A /* DrinksShopView.swift */,
+				D9257BC62ECF2179006D1C4A /* DueDatePopupView.swift */,
+				D9257BC72ECF2179006D1C4A /* ExtendDueDateView.swift */,
+				D9257BC82ECF2179006D1C4A /* FailOrSuccessView.swift */,
+				D9257BC92ECF2179006D1C4A /* FoodShopView.swift */,
+				D9257BCA2ECF2179006D1C4A /* Goal.swift */,
+				D9257BCB2ECF2179006D1C4A /* GoalCard.swift */,
+				D9257BCC2ECF2179006D1C4A /* GoalDetail.swift */,
+				D9257BCD2ECF2179006D1C4A /* HomeView.swift */,
+				D9257BCE2ECF2179006D1C4A /* ReflectionArchive.swift */,
+				D9257BCF2ECF2179006D1C4A /* SomeGoalsAppApp.swift */,
+				D9257BD02ECF2179006D1C4A /* UserData.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -82,6 +139,7 @@
 				TargetAttributes = {
 					D9E07C662EC715BE00516559 = {
 						CreatedOnToolsVersion = 26.1.1;
+						LastSwiftMigration = 2610;
 					};
 				};
 			};
@@ -109,6 +167,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9257BE22ECF2179006D1C4A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +178,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9257BD12ECF2179006D1C4A /* DrinksShopView.swift in Sources */,
+				D9257BD22ECF2179006D1C4A /* DueDatePopupView.swift in Sources */,
+				D9257BD32ECF2179006D1C4A /* FoodShopView.swift in Sources */,
+				D9257BD42ECF2179006D1C4A /* ReflectionArchive.swift in Sources */,
+				D9257BD52ECF2179006D1C4A /* AddReflectionView.swift in Sources */,
+				D9257BD62ECF2179006D1C4A /* ContentView.swift in Sources */,
+				D9257BD72ECF2179006D1C4A /* GoalDetail.swift in Sources */,
+				D9257BD82ECF2179006D1C4A /* ExtendDueDateView.swift in Sources */,
+				D9257BD92ECF2179006D1C4A /* Goal.swift in Sources */,
+				D9257BDA2ECF2179006D1C4A /* SomeGoalsAppApp.swift in Sources */,
+				D9257BDB2ECF2179006D1C4A /* AddSubGoalPopupView.swift in Sources */,
+				D9257BDC2ECF2179006D1C4A /* HomeView.swift in Sources */,
+				D9257BDD2ECF2179006D1C4A /* FailOrSuccessView.swift in Sources */,
+				D9257BDE2ECF2179006D1C4A /* UserData.swift in Sources */,
+				D9257BDF2ECF2179006D1C4A /* BigGoalCharacterView.swift in Sources */,
+				D9257BE02ECF2179006D1C4A /* AddGoalPopup.swift in Sources */,
+				D9257BE12ECF2179006D1C4A /* GoalCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +325,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -270,6 +347,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -281,6 +359,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;

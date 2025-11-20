@@ -51,7 +51,7 @@ struct FoodShopView: View {
                         Text("Coins: \(goal.coins) 😬")
                             .foregroundColor(.red)
                     } else {
-                        Text("Coins: \(goal.coins) ©️")
+                        Text("Coins: \(goal.coins) 🪙")
                             .font(.title2)
                             .foregroundStyle(.yellow)
                     }

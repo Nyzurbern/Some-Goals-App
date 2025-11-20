@@ -53,20 +53,15 @@ struct HomeView: View {
                 .padding(.horizontal)
                 ScrollView {
                     LazyVStack(spacing: 16) {
-         
-                        ForEach(activeGoals) { goal in
+                        ForEach(
+                            $userData.goals.filter {
+                                !$0.wrappedValue.isCompleted
+                            }
+                        ) { $goal in
                             NavigationLink {
-                      
                                 BigGoalCharacterView(
                                     ViewModel: GoalViewModel(goal: goal),
-                                    goal: Binding(
-                                        get: { goal },
-                                        set: { newValue in
-                                            if let index = userData.goals.firstIndex(where: { $0.id == goal.id }) {
-                                                userData.goals[index] = newValue
-                                            }
-                                        }
-                                    )
+                                    goal: $goal
                                 )
                             } label: {
                                 GoalCardView(goal: goal)
