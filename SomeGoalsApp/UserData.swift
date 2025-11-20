@@ -13,6 +13,7 @@ final class UserData: ObservableObject {
     @Published var goals: [Goal] = [] {
         didSet {
             saveGoals()
+            resetTimer()
         }
     }
     
@@ -71,7 +72,6 @@ final class UserData: ObservableObject {
     private func decreaseBarsForNewDay() {
         for index in goals.indices {
             goals[index].foodprogressbar = max(0, goals[index].foodprogressbar - 5)
-            
             goals[index].drinksprogressbar = max(0, goals[index].drinksprogressbar - 5)
         }
         
@@ -91,5 +91,10 @@ final class UserData: ObservableObject {
             goals = decoded
             print("Loaded \(goals.count) goals")
         }
+    }
+    private func resetTimer() {
+        timer?.invalidate()
+        timer = nil
+        startDailyDecreaseTimer()
     }
 }
